@@ -16,7 +16,9 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.11.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
-    "nuxt": "^2.13.0"
+    "leaflet": "^1.6.0",
+    "nuxt": "^2.13.0",
+    "vue2-leaflet": "^2.5.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.0.0",
