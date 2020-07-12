@@ -3,10 +3,12 @@ import {
   LMap,
   LTileLayer,
   LMarker,
-  LPopup
+  LPopup,
+  LPolyline
 } from 'vue2-leaflet';
 
 Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);
 Vue.component('l-marker', LMarker);
 Vue.component('l-popup', LPopup);
+Vue.component('l-polyline', LPolyline);
