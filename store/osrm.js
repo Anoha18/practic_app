@@ -1,5 +1,5 @@
 export const state = () => ({
-  url: 'http://localhost:5000'
+  url: 'http://localhost:5000/route/v1'
 });
 
 export const getters = {

@@ -6,6 +6,7 @@ import {
   LPopup,
   LPolyline
 } from 'vue2-leaflet';
+import 'leaflet-routing-machine';
 
 Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);

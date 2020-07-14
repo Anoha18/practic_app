@@ -16,79 +16,64 @@ export default {
     }
   },
   methods: {
-    async addMarker(e) {
+    addMarker(e) {
       const latlng = e.latlng;
       const markersLength = this.markers.length;
 
-      if (markersLength <= 1) {
-        const coords = [latlng.lat, latlng.lng];
-        this.markers.push({ coords });
-      } else {
+      const coords = L.latLng(latlng.lat, latlng.lng);
+      if (markersLength > 1) {
         this.markers.splice(-1, 1);
-        const coords = [latlng.lat, latlng.lng];
-        this.markers.push({ coords });
       }
 
-      if (this.markers.length === 2) {
-        await this.getWay();
-      }
+      this.markers.push({ coords });
+
+      if (this.markers.length !== 2) { return; }
+
+      this.getRotes();
     },
     handleUpdateLatLng(index, latlng) {
-      this.markers[index].coords = [latlng.lat, latlng.lng];
+      console.log('index: ', index);
+      console.log('latlng: ', latlng);
+      this.markers[index].coords = L.latLng(latlng.lat, latlng.lng);
+      this.getRotes();
     },
-    async getWay() {
-      const marker1 = this.markers[0].coords;
-      const marker2 = this.markers[1].coords;
-      let response;
 
-      try {
-        response = await this.$axios.get(`${this.osrmUrl}/route/v1/driving/${marker1[1]},${marker1[0]};${marker2[1]},${marker2[0]}`, {
-          params: {
-            overview: false,
-            alternatives: true,
-            steps: true
-          }
-        });
-      } catch (error) {
-        console.error(error);
-        return { error: error.message };
-      }
+    getRotes() {
+      const marker1Coords = this.markers[0].coords;
+      const marker2Coords = this.markers[1].coords;
 
-      const { data } = response;
+      const wayPoint1 = new L.Routing.Waypoint();
+      const wayPoint2 = new L.Routing.Waypoint();
+      wayPoint1.latLng = marker1Coords;
+      wayPoint2.latLng = marker2Coords;
 
-      if (!data || data.code !== 'Ok') { return; }
-
-      this.parseRoutes(data.routes);
-    },
-    parseRoutes(routes) {
-      if (!routes && !Array.isArray(routes)) { return; }
-      let index = 0;
-
-      if (this.polylineList.length) { this.polylineList = []; }
-
-      for (const route of routes) {
-        const legs = route.legs;
-        const polyline = {
-          id: index + 100,
-          coords: [],
-          color: index === 0 ? 'red' : 'blue'
-        };
-
-        for (const leg of legs) {
-          const steps = leg.steps;
-
-          for (const step of steps) {
-            const maneuver = step.maneuver;
-
-            if (maneuver.location && maneuver.location.length) {
-              polyline.coords.push(maneuver.location.reverse());
-            }
-          }
+      const router = L.Routing.osrmv1({
+        serviceUrl: this.osrmUrl
+      });
+      console.log('router: ', router);
+      const vm = this;
+      router.route([wayPoint1, wayPoint2], (error, routes) => {
+        if (error) {
+          return console.error(error);
         }
 
-        this.polylineList.push(polyline);
-        index += 1;
-      }
+        vm.polylineList = [];
+
+        let index = 0;
+        for (const route of routes) {
+          const polyline = {
+            id: index + 100,
+            coords: route.coordinates,
+            color: index === 0 ? 'red' : 'blue'
+          };
+
+          vm.polylineList.push(polyline);
+          index += 1;
+        }
+
+        const distance = routes[0].summary.totalDistance;
+        console.log('routing distance: ' + distance);
+      });
     }
   }
 };
@@ -97,6 +82,7 @@ export default {
 <template>
   <client-only>
     <l-map
+      ref="map"
       :style="{height: '100%'}"
       :zoom="zoom"
       :center="center"

@@ -32,7 +32,8 @@ export default {
   */
   css: [
     '~assets/scss/style.scss',
-    'leaflet/dist/leaflet.css'
+    'leaflet/dist/leaflet.css',
+    'leaflet-routing-machine/dist/leaflet-routing-machine.css'
   ],
   /*
   ** Plugins to load before mounting the App
