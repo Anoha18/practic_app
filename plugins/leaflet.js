@@ -4,7 +4,8 @@ import {
   LTileLayer,
   LMarker,
   LPopup,
-  LPolyline
+  LPolyline,
+  LControl
 } from 'vue2-leaflet';
 import 'leaflet-routing-machine';
 
@@ -13,3 +14,4 @@ Vue.component('l-tile-layer', LTileLayer);
 Vue.component('l-marker', LMarker);
 Vue.component('l-popup', LPopup);
 Vue.component('l-polyline', LPolyline);
+Vue.component('l-control', LControl);

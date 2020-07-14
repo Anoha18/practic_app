@@ -1,5 +1,10 @@
 <script>
+import SearchAddress from './SearchAddress';
+
 export default {
+  components: {
+    SearchAddress
+  },
   data() {
     return {
       zoom: 14,
@@ -7,7 +12,8 @@ export default {
       draggable: true,
       popupContent: 'Sentian HQ',
       markers: [],
-      polylineList: []
+      polylineList: [],
+      gettingRoutes: false
     };
   },
   computed: {
@@ -15,7 +21,27 @@ export default {
       return this.$store.getters['osrm/url'];
     }
   },
+  mounted() {
+    this.init();
+  },
   methods: {
+    init() {
+      const query = this.$route.query || null;
+      this.zoom = (query && +query.zoom) || this.zoom;
+      this.center = (query && query.center && JSON.parse(query.center)) || this.center;
+      const marker1 = (query && query.marker1 && JSON.parse(query.marker1)) || null;
+      const marker2 = (query && query.marker2 && JSON.parse(query.marker2)) || null;
+
+      if (marker1) {
+        this.markers.push({ coords: L.latLng(marker1[0], marker1[1]) });
+      }
+
+      if (marker2) {
+        this.markers.push({ coords: L.latLng(marker2[0], marker2[1]) });
+      }
+
+      if (this.markers.length === 2) { this.getRoutes(); }
+    },
     addMarker(e) {
       const latlng = e.latlng;
       const markersLength = this.markers.length;
@@ -26,19 +52,37 @@ export default {
       }
 
       this.markers.push({ coords });
+      this.saveIntoQueryMarkers();
+
+      if (this.markers.length !== 2 || this.gettingRoutes) { return; }
+
+      this.getRoutes();
+
+      this.gettingRoutes = true;
+    },
+    saveIntoQueryMarkers() {
+      const marker1 = this.markers[0] || null;
+      const marker2 = this.markers[1] || null;
+
+      this.$router.replace({
+        query: {
+          ...this.$route.query,
+          ...{
+            marker1: marker1 ? JSON.stringify([marker1.coords.lat, marker1.coords.lng]) : undefined,
+            marker2: marker2 ? JSON.stringify([marker2.coords.lat, marker2.coords.lng]) : undefined
+          }
+        }
+      });
+    },
+    handleUpdateLatLng(index, latlng) {
+      this.markers[index].coords = L.latLng(latlng.lat, latlng.lng);
 
       if (this.markers.length !== 2) { return; }
 
-      this.getRotes();
-    },
-    handleUpdateLatLng(index, latlng) {
-      console.log('index: ', index);
-      console.log('latlng: ', latlng);
-      this.markers[index].coords = L.latLng(latlng.lat, latlng.lng);
-      this.getRotes();
+      this.getRoutes();
     },
 
-    getRotes() {
+    getRoutes() {
       const marker1Coords = this.markers[0].coords;
       const marker2Coords = this.markers[1].coords;
 
@@ -50,7 +94,6 @@ export default {
       const router = L.Routing.osrmv1({
         serviceUrl: this.osrmUrl
       });
-      console.log('router: ', router);
       const vm = this;
       router.route([wayPoint1, wayPoint2], (error, routes) => {
         if (error) {
@@ -72,7 +115,26 @@ export default {
         }
 
         const distance = routes[0].summary.totalDistance;
-        console.log('routing distance: ' + distance);
+      });
+    },
+    handleUpdateZoom(zoom) {
+      this.zoom = +zoom;
+
+      return this.$router.push({
+        query: {
+          ...this.$route.query,
+          ...{ zoom }
+        }
+      });
+    },
+    handleUpdateCenter(center) {
+      this.center = [center.lat, center.lng];
+
+      return this.$router.push({
+        query: {
+          ...this.$route.query,
+          ...{ center: JSON.stringify([center.lat, center.lng]) }
+        }
       });
     }
   }
@@ -81,6 +143,7 @@ export default {
 
 <template>
   <client-only>
+    <!-- <div> -->
     <l-map
       ref="map"
       :style="{height: '100%'}"
@@ -88,8 +151,15 @@ export default {
       :center="center"
       language="ru"
       @click="addMarker"
+      @update:zoom="handleUpdateZoom"
+      @update:center="handleUpdateCenter"
     >
       <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
+      <l-control position="topright">
+        <search-address />
+        <br>
+        <search-address />
+      </l-control>
       <l-marker
         v-for="(marker, index) in markers"
         :key="index"
@@ -101,5 +171,6 @@ export default {
       </l-marker>
       <l-polyline v-for="polyline in polylineList" :key="polyline.id" :lat-lngs="polyline.coords" :color="polyline.color" />
     </l-map>
+    <!-- </div> -->
   </client-only>
 </template>
