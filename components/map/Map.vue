@@ -10,7 +10,6 @@ export default {
       zoom: 14,
       center: [56.134909, 47.246361],
       draggable: true,
-      popupContent: 'Sentian HQ',
       markers: [],
       polylineList: [],
       gettingRoutes: false
@@ -18,7 +17,7 @@ export default {
   },
   computed: {
     osrmUrl() {
-      return this.$store.getters['osrm/url'];
+      return this.$store.getters.osrmUrl;
     }
   },
   mounted() {
@@ -92,13 +91,15 @@ export default {
       wayPoint2.latLng = marker2Coords;
 
       const router = L.Routing.osrmv1({
-        serviceUrl: this.osrmUrl
+        // serviceUrl: this.osrmUrl
       });
       const vm = this;
       router.route([wayPoint1, wayPoint2], (error, routes) => {
         if (error) {
           return console.error(error);
         }
+
+        console.log('routes: ', routes);
 
         vm.polylineList = [];
 
@@ -158,7 +159,7 @@ export default {
       <l-control position="topright">
         <search-address />
         <br>
-        <search-address />
+        <!-- <search-address /> -->
       </l-control>
       <l-marker
         v-for="(marker, index) in markers"
@@ -166,9 +167,7 @@ export default {
         :lat-lng="marker.coords"
         :draggable="draggable"
         @update:lat-lng="(latlng) => handleUpdateLatLng(index, latlng)"
-      >
-        <l-popup :content="popupContent" />
-      </l-marker>
+      />
       <l-polyline v-for="polyline in polylineList" :key="polyline.id" :lat-lngs="polyline.coords" :color="polyline.color" />
     </l-map>
     <!-- </div> -->

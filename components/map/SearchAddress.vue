@@ -5,12 +5,50 @@ export default {
   data() {
     return {
       mdiCrosshairsGps,
-      mdiMagnify
+      mdiMagnify,
+      searchText: null,
+      model: null
     };
   },
+  computed: {
+    nominatimUrl() {
+      return this.$store.getters.nominatimUrl;
+    }
+  },
   methods: {
-    handleChangeText(text) {
-      console.log('text: ', text);
+    queryData() {
+      let timeout;
+      const vm = this;
+
+      return function(value, callback) {
+        if (!value) { return; }
+
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
+
+        async function getAddress() {
+          try {
+            const { data } = await vm.$axios.get(vm.nominatimUrl + '/search/', {
+              params: {
+                q: value,
+                format: 'json'
+                // addressdetails: 1
+              }
+            });
+
+            callback(data);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+
+        timeout = setTimeout(async() => await getAddress(), 300);
+      };
+    },
+    habdleUpdate(val) {
+      this.queryData()(val, data => console.log(data));
     }
   }
 };
@@ -21,13 +59,14 @@ export default {
     dense
     floating
   >
-    <v-text-field
+    <!-- :search-input.sync="searchText" -->
+    <v-autocomplete
       hide-details
       :prepend-icon="mdiMagnify"
       single-line
-      @keydown="handleChangeText"
+      hide-no-data
+      @update:search-input="habdleUpdate"
     />
-    <!-- @change="handleChangeText" -->
 
     <v-btn icon>
       <v-icon>{{ mdiCrosshairsGps }}</v-icon>
