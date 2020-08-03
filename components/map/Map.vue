@@ -144,7 +144,6 @@ export default {
 
 <template>
   <client-only>
-    <!-- <div> -->
     <l-map
       ref="map"
       :style="{height: '100%'}"
@@ -157,7 +156,7 @@ export default {
     >
       <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
       <l-control position="topright">
-        <search-address />
+        <search-address :style="{width: '500px'}" />
         <br>
         <!-- <search-address /> -->
       </l-control>
@@ -170,6 +169,5 @@ export default {
       />
       <l-polyline v-for="polyline in polylineList" :key="polyline.id" :lat-lngs="polyline.coords" :color="polyline.color" />
     </l-map>
-    <!-- </div> -->
   </client-only>
 </template>
