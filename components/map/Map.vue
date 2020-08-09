@@ -1,9 +1,11 @@
 <script>
 import SearchAddress from './SearchAddress';
+import RequestList from '~/components/request_list/RequestList';
 
 export default {
   components: {
-    SearchAddress
+    SearchAddress,
+    RequestList
   },
   data() {
     return {
@@ -99,8 +101,6 @@ export default {
           return console.error(error);
         }
 
-        console.log('routes: ', routes);
-
         vm.polylineList = [];
 
         let index = 0;
@@ -137,6 +137,40 @@ export default {
           ...{ center: JSON.stringify([center.lat, center.lng]) }
         }
       });
+    },
+
+    handleSelectAddress(address, indexMarker) {
+      if (!address) {
+        this.deleteMarker(indexMarker);
+        return;
+      }
+
+      const coord = {
+        latlng: {
+          lat: address.lat,
+          lng: address.lon
+        }
+      };
+
+      if (this.markers[indexMarker]) {
+        this.handleUpdateLatLng(indexMarker, coord.latlng);
+      } else {
+        this.addMarker(coord);
+      }
+    },
+
+    deleteMarker(indexMarker) {
+      this.markers.splice(indexMarker, 1);
+      this.polylineList = [];
+
+      const query = {};
+      query[`marker${indexMarker}`] = undefined;
+      this.$router.push({
+        query: {
+          ...this.$route.query,
+          ...query
+        }
+      });
     }
   }
 };
@@ -150,15 +184,24 @@ export default {
       :zoom="zoom"
       :center="center"
       language="ru"
+      :options="{zoomControl: false}"
       @click="addMarker"
       @update:zoom="handleUpdateZoom"
       @update:center="handleUpdateCenter"
     >
       <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
+      <l-control-zoom position="bottomright" />
       <l-control position="topright">
-        <search-address :style="{width: '500px'}" />
+        <search-address :coords="(markers[0] && markers[0].coords) || null" :style="{width: '500px'}" @onSelectAddress="(address) => handleSelectAddress(address, 0)" />
         <br>
-        <!-- <search-address /> -->
+        <search-address :coords="(markers[1] && markers[1].coords) || null" :style="{width: '500px'}" @onSelectAddress="(address) => handleSelectAddress(address, 1)" />
+      </l-control>
+      <l-control :options="{height: '100%'}" :style="{width: '550px', height: '100%', paddingBottom: '30px'}" position="topleft">
+        <v-card :style="{maxHeight: '100%', height: '100%'}">
+          <v-card-text :style="{maxHeight: '100%',height: '100%'}">
+            <request-list :style="{maxHeight: '100%',height: '100%'}" />
+          </v-card-text>
+        </v-card>
       </l-control>
       <l-marker
         v-for="(marker, index) in markers"
@@ -171,3 +214,9 @@ export default {
     </l-map>
   </client-only>
 </template>
+
+<style lang="scss">
+  .leaflet-top.leaflet-left {
+    height: 100% !important;
+  }
+</style>

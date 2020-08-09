@@ -6,6 +6,10 @@ export default {
     address: {
       type: String,
       default: null
+    },
+    coords: {
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -32,9 +36,30 @@ export default {
     },
     address(value) {
       this.searchText = value;
+    },
+    async coords(val) {
+      if (val) {
+        const { data } = await this.reverseQuery(val.lat, val.lng);
+        this.addressList = [data];
+
+        this.selectedAddress = data;
+      }
     }
   },
+  mounted() {
+    this.init();
+  },
   methods: {
+    async init() {
+      const { coords } = this;
+      if (coords) {
+        const { data } = await this.reverseQuery(coords.lat, coords.lng);
+
+        this.addressList = [data];
+        this.selectedAddress = data;
+      }
+    },
+
     async searchQuery(value) {
       try {
         const { data } = await this.$axios.get(this.nominatimUrl + '/search/', {
@@ -84,7 +109,9 @@ export default {
         if (error) { return console.error(error); }
 
         this.addressList = [data];
+        this.selectedAddress = data;
         this.$refs.searchEl.focus();
+        this.handleChangeSearch(data);
       }, error => console.error(error));
     },
     async reverseQuery(lat, lon) {
@@ -109,7 +136,7 @@ export default {
       }
     },
     handleChangeSearch(value) {
-      this.$emit('onSelect', value);
+      this.$emit('onSelectAddress', value);
     }
   }
 };
@@ -131,6 +158,11 @@ export default {
       :prepend-icon="mdiMagnify"
       return-object
       clearable
+      :dark="true"
+      dense
+      :menu-props="{
+        zIndex: '1000'
+      }"
       @change="handleChangeSearch"
     />
 
@@ -138,7 +170,7 @@ export default {
       <v-icon>{{ mdiCrosshairsGps }}</v-icon>
     </v-btn>
 
-    <!-- <v-btn icon>
+  <!-- <v-btn icon>
       <v-icon>mdi-dots-vertical</v-icon>
     </v-btn> -->
   </v-toolbar>
