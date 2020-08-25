@@ -19,10 +19,14 @@
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "leaflet": "^1.6.0",
     "leaflet-routing-machine": "^3.2.12",
     "nuxt": "^2.13.0",
+    "pg": "^8.3.2",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.4",
     "vue2-leaflet": "^2.5.2"
   },
   "devDependencies": {

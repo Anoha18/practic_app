@@ -12,9 +12,13 @@ export default {
       clipped: true,
       drawer: true,
       fixed: false,
-      miniVariant: true,
-      title: 'Вывоз ТБО в Чувашской Республике'
+      miniVariant: true
     };
+  },
+  computed: {
+    headerTitle() {
+      return this.$store.getters.headerTitle;
+    }
   }
 };
 </script>
@@ -22,7 +26,7 @@ export default {
 <template>
   <v-app dark>
     <sidebar :clipped="clipped" :drawer="drawer" :mini-variant="miniVariant" />
-    <navbar :title="title" :mini-variant="miniVariant" :clipped="clipped" @onChangeMiniVariant="(val) => miniVariant = val" />
+    <navbar :title="headerTitle" :mini-variant="miniVariant" :clipped="clipped" @onChangeMiniVariant="(val) => miniVariant = val" />
     <v-main>
       <v-container :style="{ minHeight: '100%', height: '100%', minWidth: '100%', padding: '0'}">
         <nuxt />

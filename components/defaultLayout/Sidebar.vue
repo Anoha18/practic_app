@@ -22,7 +22,7 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Главная',
+          title: 'Мои маршруты',
           to: '/'
         }
       ]
