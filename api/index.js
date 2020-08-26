@@ -1,10 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const { testConnection } = require('./db');
 const middlewares = require('./middlewares');
-const sequelize = require('./sequelize');
 const port = process.env.SERVER_PORT || 3001;
 
+testConnection();
 middlewares(app);
 
 app.listen(port, () => {

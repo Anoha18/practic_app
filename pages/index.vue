@@ -1,10 +1,12 @@
 <script>
 import RouteTable from '~/components/main/RoutesTable';
+import AddRouteModal from '~/components/main/AddRouteModal';
 // import Map from '~/components/map/Map';
 
 export default {
   components: {
-    RouteTable
+    RouteTable,
+    AddRouteModal
     // Map
   },
   asyncData({ store }) {
@@ -21,6 +23,11 @@ export default {
       ]
     };
   },
+  data() {
+    return {
+      addModalVisible: false
+    };
+  },
   head() {
     return {
       title: this.title
@@ -33,7 +40,7 @@ export default {
   <div :style="{height: '100%', padding: '15px 15px 0 15px'}">
     <v-row>
       <v-col>
-        <v-btn rounded>
+        <v-btn rounded @click="addModalVisible = true">
           <v-icon dark>
             mdi-plus
           </v-icon>
@@ -46,5 +53,7 @@ export default {
         <route-table :route-list="routeList" />
       </v-col>
     </v-row>
+
+    <add-route-modal :visible="addModalVisible" @onClose="addModalVisible = false" />
   </div>
 </template>
