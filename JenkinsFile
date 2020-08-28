@@ -1,0 +1,26 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('git pull') {
+      steps {
+        sh 'git pull'
+      }
+    }
+    stage('npm install') {
+      steps {
+        sh 'npm i'
+      }
+    }
+    stage('build') {
+      steps {
+        sh 'npm run build'
+      }
+    }
+    stage('pm2 restart') {
+      steps {
+        sh 'pm2 restart practic-app'
+      }
+    }
+  }
+}
