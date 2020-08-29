@@ -12,3 +12,29 @@ html {
 .color-red {
   color: #f44336 !important;
 }
+
+.tab-link {
+  color: rgba(0, 0, 0, 0.65);
+  padding: 0 20px;
+  padding-bottom: 14px;
+  text-align: center;
+
+  &-active {
+    border-bottom: 1.5px solid #0094ff;
+    color: #0094ff;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.2s;
+}
+
+.page-enter,
+.page-leave-active {
+  opacity: 0;
+}

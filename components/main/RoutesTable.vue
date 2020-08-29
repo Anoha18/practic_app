@@ -37,6 +37,11 @@ export default {
     :headers="headers"
     :items="routeList"
   >
+    <template v-slot:item.name="{ item }">
+      <nuxt-link :to="'/routes/' + item.id">
+        {{ item.name }}
+      </nuxt-link>
+    </template>
     <template v-slot:item.actions="{ item }">
       <v-icon
         small

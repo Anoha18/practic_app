@@ -1,7 +1,10 @@
 <script>
-import { mdiCrosshairsGps, mdiMagnify } from '@mdi/js';
+import SearchAddressMapModal from './SearchAddressMapModal';
 
 export default {
+  components: {
+    SearchAddressMapModal
+  },
   props: {
     address: {
       type: String,
@@ -10,22 +13,18 @@ export default {
     coords: {
       type: Object,
       default: null
-    },
-    selectedAddress: {
-      type: Object,
-      default: null
     }
   },
   data() {
     return {
       displayNameLimit: 40,
-      mdiCrosshairsGps,
-      mdiMagnify,
       searchText: this.address,
       model: null,
       timeout: null,
       addressList: [],
-      loading: false
+      loading: false,
+      selectedAddress: null,
+      visibleSearchMapModal: false
     };
   },
   computed: {
@@ -44,10 +43,8 @@ export default {
       if (val) {
         const { data } = await this.reverseQuery(val.lat, val.lng);
         this.addressList = [data];
-        this.searchText = data.display_name;
 
-        this.handleChangeSearch(data);
-        // this.selectedAddress = data;
+        this.selectedAddress = data;
       }
     }
   },
@@ -61,8 +58,7 @@ export default {
         const { data } = await this.reverseQuery(coords.lat, coords.lng);
 
         this.addressList = [data];
-        // this.selectedAddress = data;
-        this.handleChangeSearch(data);
+        this.selectedAddress = data;
       }
     },
 
@@ -106,21 +102,6 @@ export default {
         this.addressList = data;
       }, 300);
     },
-    getCurrentLocation() {
-      const vm = this;
-
-      navigator.geolocation.getCurrentPosition(async({ coords }) => {
-        const { data, error } = await this.reverseQuery(coords.latitude, coords.longitude);
-
-        if (error) { return console.error(error); }
-
-        this.addressList = [data];
-        // this.selectedAddress = data;
-        this.handleChangeSearch(data);
-        this.$refs.searchEl.focus();
-        this.handleChangeSearch(data);
-      }, error => console.error(error));
-    },
     async reverseQuery(lat, lon) {
       try {
         const { data } = await this.$axios.get(this.nominatimUrl + '/reverse', {
@@ -150,10 +131,11 @@ export default {
 </script>
 
 <template>
-  <v-toolbar dense bottom>
+  <div class="search-address__container">
     <v-autocomplete
       ref="searchEl"
-      :value="selectedAddress"
+      v-model="selectedAddress"
+      label="Адрес"
       :items="addressList"
       :loading="loading"
       :search-input.sync="searchText"
@@ -161,24 +143,27 @@ export default {
       hide-selected
       hide-details
       item-text="display_name"
-      placeholder="Начните печатать для поиска"
-      :prepend-icon="mdiMagnify"
+      placeholder="Начните печатать адрес для поиска"
       return-object
       clearable
-      :dark="true"
       dense
-      :menu-props="{
-        zIndex: '1000'
-      }"
       @change="handleChangeSearch"
     />
 
-    <v-btn icon @click="getCurrentLocation">
-      <v-icon>{{ mdiCrosshairsGps }}</v-icon>
+    <v-btn class="search-address__btn" @click="visibleSearchMapModal = true">
+      Карта
     </v-btn>
 
-  <!-- <v-btn icon>
-      <v-icon>mdi-dots-vertical</v-icon>
-    </v-btn> -->
-  </v-toolbar>
+    <search-address-map-modal :visible="visibleSearchMapModal" @onClose="visibleSearchMapModal = false" />
+  </div>
 </template>
+
+<style lang="scss" scoped>
+  .search-address__container {
+    display: flex;
+  }
+
+  .search-address__btn {
+    margin-left: 10px;
+  }
+</style>

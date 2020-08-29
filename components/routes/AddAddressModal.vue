@@ -1,11 +1,19 @@
 <script>
 import { mdiCalendar, mdiClockTimeFiveOutline } from '@mdi/js';
+import SearchAddressInput from '~/components/SearchAddress/SearchAddressInput';
 
 export default {
+  components: {
+    SearchAddressInput
+  },
   props: {
     visible: {
       type: Boolean,
       defaulf: false
+    },
+    routeId: {
+      type: Number,
+      required: true
     }
   },
   data() {
@@ -20,7 +28,7 @@ export default {
         timeEnd: ''
       },
       nameRules: [
-        v => !!v || 'Наименование обязательно'
+        v => !!v || 'Название обязательно'
       ],
       menuDatePicker: false,
       datePicker: '',
@@ -59,30 +67,12 @@ export default {
   >
     <v-card>
       <v-card-title>
-        <span class="headline">Добавление маршрута</span>
+        <span class="headline">Добавление адреса</span>
       </v-card-title>
       <v-card-text>
         <v-form ref="routeForm" v-model="valid" lazy-validation>
-          <v-text-field v-model="route.name" placeholder="Вывоз ТБО по улице Университесткая" label="Наименование" required :rules="nameRules" />
-          <v-menu
-            v-model="menuDatePicker"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="290px"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                v-model="route.date"
-                label="Дата"
-                :prepend-icon="mdiCalendar"
-                v-bind="attrs"
-                v-on="on"
-              />
-            </template>
-            <v-date-picker v-model="datePicker" @input="menuDatePicker = false" />
-          </v-menu>
+          <v-text-field v-model="route.name" placeholder="Вывоз ТБО Университетская 11" label="Название" required :rules="nameRules" />
+          <search-address-input />
           <v-menu
             ref="menuTimeStart"
             v-model="menuTimeStartPicker"
