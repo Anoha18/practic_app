@@ -13,6 +13,18 @@ export default {
     coords: {
       type: Object,
       default: null
+    },
+    label: {
+      type: String,
+      default: 'Адрес'
+    },
+    required: {
+      type: Boolean,
+      default: false
+    },
+    rules: {
+      type: Array,
+      default: null
     }
   },
   data() {
@@ -124,7 +136,16 @@ export default {
       }
     },
     handleChangeSearch(value) {
+      console.log(value);
       this.$emit('onSelectAddress', value);
+    },
+    handleSelectedAddressModal(value) {
+      if (!value) { return; }
+
+      this.addressList = [value.address];
+      this.selectedAddress = value.address;
+      this.searchText = value.address.display_name;
+      this.handleChangeSearch(value);
     }
   }
 };
@@ -135,7 +156,7 @@ export default {
     <v-autocomplete
       ref="searchEl"
       v-model="selectedAddress"
-      label="Адрес"
+      :label="label"
       :items="addressList"
       :loading="loading"
       :search-input.sync="searchText"
@@ -147,14 +168,16 @@ export default {
       return-object
       clearable
       dense
-      @change="handleChangeSearch"
+      :required="required"
+      :rules="rules"
+      @change="(value) => value ? handleChangeSearch({address: value, lat: +value.lat, lng: +value.lon}) : handleChangeSearch(null)"
     />
 
     <v-btn class="search-address__btn" @click="visibleSearchMapModal = true">
       Карта
     </v-btn>
 
-    <search-address-map-modal :visible="visibleSearchMapModal" @onClose="visibleSearchMapModal = false" />
+    <search-address-map-modal :visible="visibleSearchMapModal" @onSelect="handleSelectedAddressModal" @onClose="visibleSearchMapModal = false" />
   </div>
 </template>
 

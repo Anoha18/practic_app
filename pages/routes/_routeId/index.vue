@@ -1,4 +1,6 @@
 <script>
+import { mdiArrowLeft } from '@mdi/js';
+
 export default {
   middleware: [
     ({ route, redirect }) => {
@@ -7,11 +9,23 @@ export default {
       }
     }
   ],
-  asyncData({ params }) {
+  asyncData({ params, store }) {
     const { routeId } = params;
+    const title = 'Маршрут 1';
+    store.commit('SET_HEADER_TITLE', title);
 
     return {
       routeId
+    };
+  },
+  data() {
+    return {
+      mdiArrowLeft
+    };
+  },
+  head() {
+    return {
+      title: this.title
     };
   }
 };
@@ -20,7 +34,14 @@ export default {
 <template>
   <div>
     <v-toolbar>
-      <v-toolbar-title>Маршрут 1</v-toolbar-title>
+      <v-btn text @click="$router.go(-1)">
+        <v-icon>
+          mdi-arrow-left
+        </v-icon>
+      </v-btn>
+      <v-toolbar-title :style="{marginLeft: '10px'}">
+        Маршрут 1
+      </v-toolbar-title>
       <template v-slot:extension>
         <v-row flex :style="{paddingLeft: '10px'}">
           <nuxt-link

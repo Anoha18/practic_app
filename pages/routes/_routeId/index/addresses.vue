@@ -7,7 +7,8 @@ export default {
     AddressesTable,
     AddAddressModal
   },
-  asyncData() {
+  asyncData({ params }) {
+    const { routeId } = params;
     return {
       addressList: [
         {
@@ -20,7 +21,8 @@ export default {
           time_end: '21:00',
           priority: 'Важно'
         }
-      ]
+      ],
+      routeId
     };
   },
   data() {
@@ -46,6 +48,6 @@ export default {
       <addresses-table :address-list="addressList" />
     </v-card>
 
-    <add-address-modal :visible="addModalVisible" @onClose="addModalVisible = false" />
+    <add-address-modal :route-id="+routeId" :visible="addModalVisible" @onClose="addModalVisible = false" />
   </div>
 </template>

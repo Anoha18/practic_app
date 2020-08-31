@@ -19,7 +19,7 @@ export default {
       marker: {
         lat: null,
         lng: null,
-        address: ''
+        address: null
       },
       visibleMap: false
     };
@@ -93,7 +93,7 @@ export default {
       if (!address) {
         this.marker.lat = null;
         this.marker.lng = null;
-        this.marker.address = '';
+        this.marker.address = null;
         return;
       }
 
@@ -101,6 +101,10 @@ export default {
       this.marker.lat = address.lat;
       this.marker.lng = address.lon;
       this.changeCenterByMarker();
+    },
+    select() {
+      this.$emit('onSelect', this.marker);
+      this.closeModal();
     }
 
   }
@@ -124,7 +128,7 @@ export default {
         <v-toolbar-items>
           <v-btn
             text
-            @click="closeModal"
+            @click="select"
           >
             Выбрать
           </v-btn>
@@ -154,7 +158,7 @@ export default {
             @update:lat-lng="handleUpdateLatLng"
           >
             <l-popup>
-              {{ marker.address }}
+              {{ marker.address && marker.address.display_name }}
             </l-popup>
           </l-marker>
         </l-map>

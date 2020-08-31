@@ -23,17 +23,55 @@ export default {
       valid: true,
       route: {
         name: '',
-        date: '',
         timeStart: '',
-        timeEnd: ''
+        timeEnd: '',
+        address: null,
+        lat: null,
+        lng: null,
+        priority: 1,
+        comment: '',
+        weight: null,
+        price: null
       },
       nameRules: [
         v => !!v || 'Название обязательно'
       ],
+      carRules: [
+        v => !!v || 'Выберите автомобиль'
+      ],
+      addressRules: [
+        v => !!v || 'Укажите адрес'
+      ],
+      weightRules: [
+        v => (+v || v === '') || 'Только цифры'
+      ],
+      priceRules: [
+        v => (+v || v === '') || 'Только цифры'
+      ],
       menuDatePicker: false,
       datePicker: '',
       menuTimeStartPicker: false,
-      menuTimeEndPicker: false
+      menuTimeEndPicker: false,
+      priorityList: [
+        {
+          id: 1,
+          name: 'Обычный'
+        },
+        {
+          id: 2,
+          name: 'Высокий'
+        }
+      ],
+      carList: [
+        {
+          id: 1,
+          name: 'Мусоровоз 1'
+        },
+        {
+          id: 2,
+          name: 'Мусоровоз 2'
+        }
+      ]
     };
   },
   watch: {
@@ -54,6 +92,17 @@ export default {
 
       const [year, month, day] = date.split('-');
       return `${day}.${month}.${year}`;
+    },
+    handleSelectAddress(value) {
+      if (!value) {
+        this.route.address = null;
+        this.route.lat = null;
+        this.route.lng = null;
+      } else {
+        this.route.address = value.address.display_name;
+        this.route.lng = value.lng;
+        this.route.lat = value.lat;
+      }
     }
   }
 };
@@ -71,8 +120,27 @@ export default {
       </v-card-title>
       <v-card-text>
         <v-form ref="routeForm" v-model="valid" lazy-validation>
-          <v-text-field v-model="route.name" placeholder="Вывоз ТБО Университетская 11" label="Название" required :rules="nameRules" />
-          <search-address-input />
+          <v-text-field
+            v-model="route.name"
+            :style="{marginBottom: '10px'}"
+            placeholder="Вывоз ТБО Университетская 11"
+            label="Название*"
+            required
+            :rules="nameRules"
+          />
+          <search-address-input label="Адрес*" required :rules="addressRules" @onSelectAddress="handleSelectAddress" />
+          <v-text-field
+            v-model="route.weight"
+            placeholder="50"
+            label="Вес (кг)"
+            :rules="weightRules"
+          />
+          <v-text-field
+            v-model="route.price"
+            placeholder="1000"
+            label="Цена (руб)"
+            :rules="priceRules"
+          />
           <v-menu
             ref="menuTimeStart"
             v-model="menuTimeStartPicker"
@@ -129,6 +197,29 @@ export default {
               @click:minute="$refs.menuTimeEnd.save(route.timeEnd)"
             />
           </v-menu>
+          <v-select
+            v-model="route.priority"
+            :items="priorityList"
+            label="Приоритет"
+            item-text="name"
+            item-value="id"
+          />
+          <v-select
+            v-model="route.car"
+            :items="carList"
+            label="Автомобиль*"
+            item-text="name"
+            item-value="id"
+            required
+            :rules="carRules"
+          />
+          <v-textarea
+            v-model="route.comment"
+            name="input-7-1"
+            label="Комментарий"
+            clearable
+            placeholder="Укажите комментарий к адресу"
+          />
         </v-form>
       </v-card-text>
       <v-card-actions>
