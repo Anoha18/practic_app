@@ -1,5 +1,5 @@
 const { Strategy, ExtractJwt } = require('passport-jwt');
-const { getUserById } = require('../sql/user');
+const { user: User } = require('../sql');
 const JWT_SECRET = process.env.JWT_SECRET;
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -8,7 +8,7 @@ const options = {
 
 module.exports = new Strategy(options, async(payload, done) => {
   const { user_id } = payload;
-  const { user, error } = await getUserById(user_id);
+  const { user, error } = await User.getUserById(user_id);
 
   if (error) { return done(error, false); }
 
