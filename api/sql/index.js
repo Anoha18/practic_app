@@ -1,7 +1,7 @@
-const { request } = require("express");
-
 const user = require('./user');
+const session = require('./session');
 
 module.exports = {
-  user
+  user,
+  session
 };

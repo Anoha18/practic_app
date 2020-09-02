@@ -1,4 +1,6 @@
 import colors from 'vuetify/es5/util/colors';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export default {
   /*
@@ -40,7 +42,8 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    {src: '~/plugins/leaflet.js', ssr: false}
+    { src: '~/plugins/leaflet.js', ssr: false },
+    '~/plugins/axios'
   ],
   /*
   ** Auto import components
@@ -66,14 +69,20 @@ export default {
     '@nuxtjs/pwa'
   ],
 
-  serverMiddleware: {
-    '/api': '~/api'
-  },
+  serverMiddleware: [
+    '~/api/'
+  ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
-  axios: {},
+  axios: {
+    requestInterceptor(config, { store }) {
+      config.headers.commom['access-token'] = store.getters['user/token'] || undefined;
+    },
+    // host: process.env.SERVER_API_HOST,
+    // port: process.env.SERVER_API_PORT,
+  },
   /*
   ** vuetify module configuration
   ** https://github.com/nuxt-community/vuetify-module

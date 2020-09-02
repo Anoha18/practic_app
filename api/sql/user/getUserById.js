@@ -1,10 +1,11 @@
-const { pool } = require('../db');
+const { pool } = require('../../db');
 
 const userKeys = [
   'user_id as id',
+  'user_id',
+  'login',
   'name',
   'lastname',
-  'password',
   'email',
   'phone',
   'deleted',

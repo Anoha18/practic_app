@@ -1,10 +1,11 @@
-const { pool } = require('../db');
+const { pool } = require('../../db');
 
 const userKeys = [
   'user_id as id',
+  'user_id',
+  'login',
   'name',
   'lastname',
-  'password',
   'email',
   'phone',
   'deleted',
@@ -14,7 +15,9 @@ const userKeys = [
 
 module.exports = async({ login, password }) => {
   if (!login || !password) { return { error: 'Not found login or password' }; }
-  const query = `select ${userKeys.join(',')} from users where login = ${login} and password = ${password}`;
+  const query = `
+    select ${userKeys.join(',')} from users where login = '${login}' and password = crypt('${password}', password)
+  `;
 
   try {
     const { rows } = await pool.query(query);

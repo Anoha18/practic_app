@@ -14,7 +14,8 @@ export const mutations = {
 
 export const actions = {
   async authUser({ commit }, authData) {
-    await console.log(this);
+    const result = await this.$axios.$post('/api/auth/local', authData);
+    console.log(result);
   }
 };
 
