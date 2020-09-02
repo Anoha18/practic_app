@@ -1,7 +1,8 @@
 export const state = () => ({
   nominatimUrl: 'https://nominatim.openstreetmap.org',
   osrmUrl: 'http://localhost:5000/route/v1',
-  headerTitle: ''
+  headerTitle: '',
+  theme: 'dark'
 });
 
 export const mutations = {
@@ -13,5 +14,6 @@ export const mutations = {
 export const getters = {
   nominatimUrl: s => s.nominatimUrl,
   osrmUrl: s => s.osrmUrl,
-  headerTitle: s => s.headerTitle
+  headerTitle: s => s.headerTitle,
+  theme: s => s.theme
 };

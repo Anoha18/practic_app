@@ -14,7 +14,7 @@ export const get = async({ url, data, query }) => {
   }
 };
 
-export const psot = async({ url, data, query }) => {
+export const post = async({ url, data, query }) => {
   try {
     console.log('post QUERY');
   } catch (error) {

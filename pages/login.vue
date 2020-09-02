@@ -1,0 +1,82 @@
+<script>
+export default {
+  layout: 'empty',
+  data() {
+    return {
+      loginRules: [
+        v => !!v || 'Введите логин'
+      ],
+      passwordRules: [
+        v => !!v || 'Ввудите пароль'
+      ],
+      authData: {
+        login: '',
+        password: ''
+      },
+      validForm: true
+    };
+  },
+  methods: {
+    async login() {
+      await this.$store.dispatch('user/authUser', this.authData);
+    }
+  }
+};
+</script>
+
+<template>
+  <v-row
+    align="center"
+    justify="center"
+  >
+    <v-col
+      cols="12"
+      sm="8"
+      md="4"
+    >
+      <v-card class="elevation-12">
+        <v-toolbar
+          color="primary"
+          dark
+          flat
+        >
+          <v-toolbar-title>Авторизация</v-toolbar-title>
+          <v-spacer />
+          <nuxt-link :style="{color: 'white'}" to="/register">
+            Регистрация
+          </nuxt-link>
+        </v-toolbar>
+        <v-card-text>
+          <v-form
+            v-model="validForm"
+          >
+            <v-text-field
+              v-model="authData.login"
+              label="Логин"
+              name="login"
+              prepend-icon="mdi-account"
+              type="text"
+              :rules="loginRules"
+            />
+
+            <v-text-field
+              id="password"
+              v-model="authData.password"
+              label="Пароль"
+              name="password"
+              prepend-icon="mdi-lock"
+              type="password"
+              :rules="passwordRules"
+            />
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn :disabled="!validForm" color="primary" @click="login">
+            Войти
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
+</template>
