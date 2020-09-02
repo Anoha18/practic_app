@@ -23,7 +23,7 @@ module.exports = (req, res, next) => {
     };
     const access_token = generateJWT(payload);
 
-    const ip = req.connection.remoteAddress;
+    // const ip = req.connection.remoteAddress;
     // TODO Добавить в методе добавления сессии проверку на существуюшие ip
     // const { error: createSessionError } = await session.createSession({ user_id: user.user_id, ip, token: access_token });
 

@@ -10,4 +10,4 @@ middlewares(app);
 module.exports = {
   path: '/api/',
   handler: app
-}
+};
