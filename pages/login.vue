@@ -13,12 +13,33 @@ export default {
         login: '',
         password: ''
       },
-      validForm: true
+      validForm: true,
+      snackbar: {
+        visible: false,
+        text: '',
+        color: 'info'
+      }
     };
   },
   methods: {
     async login() {
-      await this.$store.dispatch('user/authUser', this.authData);
+      const { error, info } = await this.$store.dispatch('user/authUser', this.authData);
+
+      if (error) {
+        this.snackbar.text = error;
+        this.snackbar.color = 'error';
+        this.snackbar.visible = true;
+        return;
+      }
+
+      if (info) {
+        this.snackbar.text = info;
+        this.snackbar.color = 'info';
+        this.snackbar.visible = true;
+        return;
+      }
+
+      this.$router.replace('/');
     }
   }
 };
@@ -78,5 +99,13 @@ export default {
         </v-card-actions>
       </v-card>
     </v-col>
+
+    <v-snackbar
+      v-model="snackbar.visible"
+      top
+      :color="snackbar.color"
+    >
+      {{ snackbar.text }}
+    </v-snackbar>
   </v-row>
 </template>

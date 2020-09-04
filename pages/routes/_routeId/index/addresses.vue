@@ -7,6 +7,7 @@ export default {
     AddressesTable,
     AddAddressModal
   },
+  middleware: ['checkAuth'],
   asyncData({ params }) {
     const { routeId } = params;
     return {

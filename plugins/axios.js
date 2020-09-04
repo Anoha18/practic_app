@@ -1,6 +1,6 @@
-export default ({ $axios, redirec }) => {
+export default ({ $axios, redirect }) => {
   $axios.onError((error) => {
     console.log('HERE');
-    console.error(error);
+    console.log(error.response);
   });
 };

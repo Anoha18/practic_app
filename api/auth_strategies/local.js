@@ -13,7 +13,7 @@ module.exports = new Strategy(options, async(login, password, done) => {
   }
 
   if (!user) {
-    return done(null, false, { message: 'Логин или пароль неверный' });
+    return done(null, false, 'Логин или пароль неверный');
   }
 
   done(null, user);

@@ -3,6 +3,7 @@ import { mdiArrowLeft } from '@mdi/js';
 
 export default {
   middleware: [
+    'checkAuth',
     ({ route, redirect }) => {
       if (route.name === 'routes-routeId') {
         return redirect(`/routes/${route.params.routeId}/addresses`);

@@ -9,6 +9,7 @@ export default {
     AddRouteModal
     // Map
   },
+  middleware: ['checkAuth'],
   asyncData({ store }) {
     const title = 'Мои маршруты';
     store.commit('SET_HEADER_TITLE', title);

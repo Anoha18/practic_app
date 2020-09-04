@@ -29,6 +29,6 @@ module.exports = (req, res, next) => {
 
     // if (createSessionError) { console.error('CREATE SESSION ERROR: ', createSessionError); }
 
-    res.json({ ...user, ...{ access_token } });
+    res.status(200).json({user: { ...user, ...{ access_token } }});
   })(req, res, next);
 };
