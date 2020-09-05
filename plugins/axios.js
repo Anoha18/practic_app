@@ -1,6 +1,11 @@
 export default ({ $axios, redirect }) => {
   $axios.onError((error) => {
-    console.log('HERE');
-    console.log(error.response);
+    const { response } = error;
+    const { status, statusText } = response;
+    console.error(`AXIOS ERROR: ${status || ''} - ${statusText || ''}`);
+
+    if (+status === 401) {
+      return redirect('/login');
+    }
   });
 };

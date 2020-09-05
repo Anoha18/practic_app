@@ -77,9 +77,6 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    requestInterceptor(config, { store }) {
-      config.headers.commom['access-token'] = store.getters['user/access_token'] || undefined;
-    },
     // host: process.env.SERVER_API_HOST,
     // port: process.env.SERVER_API_PORT,
   },

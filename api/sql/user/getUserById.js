@@ -15,7 +15,10 @@ const userKeys = [
 
 module.exports = async(userId) => {
   if (!userId) { return { error: 'User id not found' }; }
-  const query = `select ${userKeys.join(',')} from users where user_id = ${userId}`;
+  const query = `
+    select ${userKeys.join(',')} from users 
+    where user_id = ${userId} and deleted = false
+  `;
 
   try {
     const { rows } = await pool.query(query);

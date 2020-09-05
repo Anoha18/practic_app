@@ -1,14 +1,17 @@
+const passport = require('passport');
 const {
-  // api,
+  api,
   auth
 } = require('../routes');
 const bodyParser = require('./bodyParser');
-const passport = require('./passport');
+const passportMiddleware = require('./passport');
+const getClientIp = require('./getClientIp');
 
 module.exports = (app) => {
   bodyParser(app);
-  passport(app);
+  passportMiddleware(app);
 
+  app.use('*', getClientIp);
   app.use('/auth', auth);
-  // app.use('/api', api);
+  app.use('/', passport.authenticate('jwt', { session: false }), api);
 };

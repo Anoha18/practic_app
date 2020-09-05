@@ -14,6 +14,11 @@ export default {
       required: true
     }
   },
+  computed: {
+    user() {
+      return this.$store.getters['user/user'];
+    }
+  },
   methods: {
     handleChangeMiniVariant() {
       this.$emit('onChangeMiniVariant', !this.miniVariant);
@@ -40,7 +45,7 @@ export default {
       <span class="white--text">ВА</span>
     </v-avatar>
     <div class="ml-3">
-      Владислав Анохин
+      {{ (user && user.name) || '' }} {{ (user && user.lastname) || '' }}
     </div>
   </v-app-bar>
 </template>

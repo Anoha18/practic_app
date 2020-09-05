@@ -16,7 +16,10 @@ const userKeys = [
 module.exports = async({ login, password }) => {
   if (!login || !password) { return { error: 'Not found login or password' }; }
   const query = `
-    select ${userKeys.join(',')} from users where login = '${login}' and password = crypt('${password}', password)
+    select ${userKeys.join(',')} from users
+    where login = '${login}' 
+    and password = crypt('${password}', password)
+    and deleted = false
   `;
 
   try {

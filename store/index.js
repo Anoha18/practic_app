@@ -11,6 +11,14 @@ export const mutations = {
   }
 };
 
+export const actions = {
+  async nuxtServerInit({ dispatch }, { req }) {
+    const { cookie } = req.headers;
+
+    await dispatch('user/autoLogin', cookie);
+  }
+};
+
 export const getters = {
   nominatimUrl: s => s.nominatimUrl,
   osrmUrl: s => s.osrmUrl,

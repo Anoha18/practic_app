@@ -1,6 +1,13 @@
 <script>
 export default {
   layout: 'empty',
+  middleware: [
+    ({ store, redirect }) => {
+      if (store.getters['user/access_token'] && store.getters['user/user']) {
+        return redirect('/');
+      }
+    }
+  ],
   data() {
     return {
       loginRules: [

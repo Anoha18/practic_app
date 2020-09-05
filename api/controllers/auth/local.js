@@ -22,13 +22,13 @@ module.exports = (req, res, next) => {
       lastname: user.lastname
     };
     const access_token = generateJWT(payload);
+    const { clientIp } = req;
 
-    // const ip = req.connection.remoteAddress;
-    // TODO Добавить в методе добавления сессии проверку на существуюшие ip
-    // const { error: createSessionError } = await session.createSession({ user_id: user.user_id, ip, token: access_token });
+    const { error: createSessionError } = await session.createSession({ user_id: user.user_id, ip: clientIp, token: access_token });
 
-    // if (createSessionError) { console.error('CREATE SESSION ERROR: ', createSessionError); }
+    if (createSessionError) { console.error('CREATE SESSION ERROR: ', createSessionError); }
 
+    res.cookie('access_token', access_token, { httpOnly: true })
     res.status(200).json({user: { ...user, ...{ access_token } }});
   })(req, res, next);
 };
