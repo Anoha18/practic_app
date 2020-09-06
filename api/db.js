@@ -8,6 +8,12 @@ const pool = new Pool({
   port: process.env.DB_PORT
 })
 
+const oldPoolQuery = pool.query;
+pool.query = (...args) => {
+  console.log('QUERY:', args);
+  return oldPoolQuery.apply(pool, args);
+};
+
 const testConnection = async() => {
   try {
     await pool.connect();

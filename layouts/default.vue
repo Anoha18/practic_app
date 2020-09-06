@@ -1,11 +1,13 @@
 <script>
 import Sidebar from '~/components/defaultLayout/Sidebar';
 import Navbar from '~/components/defaultLayout/Navbar';
+import GlobalSnackbar from '~/components/GlobalSnackbar';
 
 export default {
   components: {
     Sidebar,
-    Navbar
+    Navbar,
+    GlobalSnackbar
   },
   data() {
     return {
@@ -32,5 +34,7 @@ export default {
         <nuxt />
       </v-container>
     </v-main>
+
+    <global-snackbar />
   </v-app>
 </template>

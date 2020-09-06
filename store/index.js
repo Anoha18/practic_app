@@ -2,12 +2,22 @@ export const state = () => ({
   nominatimUrl: 'https://nominatim.openstreetmap.org',
   osrmUrl: 'http://localhost:5000/route/v1',
   headerTitle: '',
-  theme: 'dark'
+  theme: 'dark',
+  globalSnackbar: {
+    visible: false,
+    text: '',
+    timeout: 3000,
+    top: true,
+    color: 'success'
+  }
 });
 
 export const mutations = {
   SET_HEADER_TITLE(state, headerTitle) {
     state.headerTitle = headerTitle;
+  },
+  SET_GLOBAL_SNACKBAR(state, globalSnackbar) {
+    state.globalSnackbar = globalSnackbar;
   }
 };
 
@@ -23,5 +33,6 @@ export const getters = {
   nominatimUrl: s => s.nominatimUrl,
   osrmUrl: s => s.osrmUrl,
   headerTitle: s => s.headerTitle,
-  theme: s => s.theme
+  theme: s => s.theme,
+  globalSnackbar: s => s.globalSnackbar
 };

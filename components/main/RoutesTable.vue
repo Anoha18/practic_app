@@ -23,7 +23,8 @@ export default {
       headers: [
         { text: 'Наименование', align: 'start', sortable: true, value: 'name' },
         { text: 'Дата', value: 'date' },
-        { text: 'База', value: 'base' },
+        { text: 'Приоритет', value: 'priority_name' },
+        // { text: 'База', value: 'base' },
         { text: 'Адреса', value: 'addresses' },
         { text: '', value: 'actions', sortable: false }
       ]

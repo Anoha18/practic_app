@@ -1,10 +1,10 @@
-import JsCookie from 'js-cookie';
 import Cookie from 'cookie';
 import JwtDecode from 'jwt-decode';
 
 export const state = () => ({
   user: null,
-  access_token: null
+  access_token: null,
+  refresh_token: null
 });
 
 export const mutations = {
@@ -13,6 +13,9 @@ export const mutations = {
   },
   SET_TOKEN(state, access_token) {
     state.access_token = access_token;
+  },
+  SET_REFRESH_TOKEN(state, refresh_token) {
+    state.refresh_token = refresh_token;
   }
 };
 
@@ -22,7 +25,7 @@ export const actions = {
     try {
       respone = await this.$axios.$post('/api/auth/local', authData);
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
       return { error: error.message };
     }
 
@@ -33,6 +36,7 @@ export const actions = {
 
     commit('SET_USER', user);
     dispatch('setToken', user.access_token);
+    commit('SET_REFRESH_TOKEN', user.refresh_token);
 
     return { user };
   },
@@ -44,33 +48,32 @@ export const actions = {
     if (!cookieStr) { return; }
 
     const cookies = Cookie.parse(cookieStr);
-    const { access_token } = cookies;
+    const { access_token, refresh_token } = cookies || {};
+    commit('SET_REFRESH_TOKEN', refresh_token || null);
 
-    if (!access_token) { return; }
-    dispatch('setToken', access_token);
+    if (access_token) {
+      dispatch('setToken', access_token);
+      const jwtData = JwtDecode(access_token);
+      const { user_id } = jwtData;
 
-    const jwtData = JwtDecode(access_token);
-    const { user_id } = jwtData;
-    let response;
-    try {
-      response = await this.$axios.$get(`/api/users/${user_id}`);
-    } catch (error) {
-      return console.error(error);
+      const { user } = await dispatch('getUserById', user_id);
+
+      if (!user) { return; }
+
+      user.access_token = access_token;
+      commit('SET_USER', user);
+    } else if (!access_token && refresh_token) {
+      const { user } = await dispatch('refreshToken');
+      commit('SET_USER', user);
     }
-
-    const { user } = response;
-    if (!user) { return; }
-
-    user.access_token = access_token;
-    commit('SET_USER', user);
   },
   async logout({ commit }) {
     let response;
     try {
       response = await this.$axios.$get('/api/auth/logout');
     } catch (error) {
-      console.error(error);
-      return { error };
+      console.error(error.message);
+      return { error: error.message };
     }
     const { result } = response;
 
@@ -81,10 +84,52 @@ export const actions = {
     commit('SET_USER', null);
 
     return { result };
+  },
+  // обновление токена
+  async refreshToken({ commit, dispatch, getters }) {
+    const refresh_token = getters.refresh_token;
+
+    if (!refresh_token) { return { error: 'Not found refresh token' }; }
+    let response;
+    try {
+      response = await this.$axios.$post('/api/auth/token/refresh', {
+        refresh_token
+      });
+    } catch (error) {
+      console.error(error);
+      return { error: error.message };
+    }
+
+    const { user } = response;
+    const { access_token, refresh_token: new_refresh_token } = user;
+    dispatch('setToken', access_token);
+    commit('SET_REFRESH_TOKEN', new_refresh_token);
+    this.$cookies.set('access_token', access_token);
+    this.$cookies.set('refresh_token', refresh_token);
+
+    return {
+      access_token,
+      refresh_token: new_refresh_token,
+      user
+    };
+  },
+  // получение пользоватля по id
+  async getUserById({ commit }, userId) {
+    let response;
+    try {
+      response = await this.$axios.$get(`/api/users/${userId}`);
+    } catch (error) {
+      console.error(error.message);
+      return { error: error.message };
+    }
+
+    const { user } = response || {};
+    return { user: user || null };
   }
 };
 
 export const getters = {
   user: s => s.user,
-  access_token: s => s.access_token
+  access_token: s => s.access_token,
+  refresh_token: s => s.refresh_token
 };

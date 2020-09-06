@@ -10,18 +10,21 @@ export default {
     // Map
   },
   middleware: ['checkAuth'],
-  asyncData({ store }) {
+  async asyncData({ store, $axios }) {
     const title = 'Мои маршруты';
     store.commit('SET_HEADER_TITLE', title);
 
+    const { result, error } = await $axios.$get('/api/routes/list');
+
     return {
       title,
-      routeList: [
-        { id: 1, name: '1', date: '24.08.2020', base: 'База', addresses: 3 },
-        { id: 2, name: '1', date: '24.08.2020', base: 'База', addresses: 3 },
-        { id: 3, name: '1', date: '24.08.2020', base: 'База', addresses: 3 },
-        { id: 4, name: '1', date: '24.08.2020', base: 'База', addresses: 3 }
-      ]
+      routeList: result || []
+      // [
+      //   { id: 1, name: '1', date: '24.08.2020', base: 'База', addresses: 3 },
+      //   { id: 2, name: '1', date: '24.08.2020', base: 'База', addresses: 3 },
+      //   { id: 3, name: '1', date: '24.08.2020', base: 'База', addresses: 3 },
+      //   { id: 4, name: '1', date: '24.08.2020', base: 'База', addresses: 3 }
+      // ]
     };
   },
   data() {

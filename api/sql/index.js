@@ -1,7 +1,11 @@
 const user = require('./user');
-const session = require('./session');
+const refreshToken = require('./refresh_token');
+const routesPriority = require('./routes_priority');
+const route = require('./route');
 
 module.exports = {
   user,
-  session
+  refreshToken,
+  routesPriority,
+  route
 };

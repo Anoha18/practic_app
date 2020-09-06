@@ -17,7 +17,9 @@ export default {
         name: '',
         date: '',
         timeStart: '',
-        timeEnd: ''
+        timeEnd: '',
+        priorityId: 2,
+        description: ''
       },
       nameRules: [
         v => !!v || 'Наименование обязательно'
@@ -25,27 +27,78 @@ export default {
       menuDatePicker: false,
       datePicker: '',
       menuTimeStartPicker: false,
-      menuTimeEndPicker: false
+      menuTimeEndPicker: false,
+      routesPriorityList: []
     };
   },
   watch: {
     datePicker(val) {
       this.route.date = this.formatDate(this.datePicker);
+    },
+    async visible(val) {
+      if (val && !this.routesPriorityList.length) {
+        await this.loadPriorityList();
+      }
     }
   },
   methods: {
     closeModal() {
       this.$emit('onClose');
     },
-    saveRoute() {
-      console.log('SUBMIT: ', this.route);
+    async saveRoute() {
+      let response;
+      try {
+        response = await this.$axios.$put('/api/routes/new', this.route);
+      } catch (error) {
+        console.error(error);
+        return this.$store.commit('SET_GLOBAL_SNACKBAR', {
+          ...this.$store.getters.globalSnackbar,
+          ...{
+            visible: true,
+            text: 'Произошла ошибка при сохранении маршрута. Сообщение ошибки: ' + error,
+            timeout: 7000,
+            color: 'error'
+          }
+        });
+      }
+
+      this.$store.commit('SET_GLOBAL_SNACKBAR', {
+        ...this.$store.getters.globalSnackbar,
+        ...{
+          visible: true,
+          text: 'Маршрут успешно сохранен',
+          timeout: 3000,
+          color: 'success'
+        }
+      });
       this.closeModal();
+      this.clearData();
+      this.$emit('reloadRouteList', true);
+    },
+    clearData() {
+      this.route.name = '';
+      this.route.date = '';
+      this.route.timeStart = '';
+      this.route.timeEnd = '';
+      this.route.priorityId = 2;
+      this.route.description = '';
     },
     formatDate(date) {
       if (!date) { return null; }
 
       const [year, month, day] = date.split('-');
       return `${day}.${month}.${year}`;
+    },
+    async loadPriorityList() {
+      try {
+        const { result } = await this.$axios.$get('/api/routes_priority/list');
+
+        if (!result || !result.length) { return; }
+
+        this.routesPriorityList = result;
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 };
@@ -139,11 +192,25 @@ export default {
               @click:minute="$refs.menuTimeEnd.save(route.timeEnd)"
             />
           </v-menu>
+          <v-select
+            v-model="route.priorityId"
+            :items="routesPriorityList"
+            label="Приоритет"
+            item-text="name"
+            item-value="id"
+          />
+          <v-textarea
+            v-model="route.description"
+            name="input-7-1"
+            label="Описание"
+            clearable
+            placeholder="Укажите описание к маршруту"
+          />
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click="closeModal">
+        <v-btn text @click="() => {clearData(); closeModal();}">
           Отменить
         </v-btn>
         <v-btn text @click="saveRoute">
