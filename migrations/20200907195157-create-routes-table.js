@@ -26,7 +26,7 @@ exports.up = function(db) {
           onDelete: 'CASCADE',
           onUpdate: 'RESTRICT'
         },
-        mapping: 'priority_id'
+        mapping: 'route_priority_id'
       }
     },
     name: { type: 'text' },
@@ -56,8 +56,8 @@ exports.down = function(db) {
   return db.removeForeignKey('routes', 'routes_priority_id_fkey', () => {
     db.removeForeignKey('routes', 'routes_creator_id_fkey', () => {
       db.dropTable('routes');
-    })
-  })
+    });
+  });
 };
 
 exports._meta = {

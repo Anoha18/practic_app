@@ -74,6 +74,8 @@ export default {
       this.closeModal();
       this.clearData();
       this.$emit('reloadRouteList', true);
+      const { result: { route_id } } = response;
+      this.$router.push(`/routes/${route_id}`);
     },
     clearData() {
       this.route.name = '';

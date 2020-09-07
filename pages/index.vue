@@ -32,6 +32,20 @@ export default {
       addModalVisible: false
     };
   },
+  methods: {
+    async reloadRouteList() {
+      try {
+        const { result, error } = await this.$axios.$get('/api/routes/list');
+        if (error) {
+          return console.error(error);
+        }
+
+        this.routeList = result || [];
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  },
   head() {
     return {
       title: this.title
@@ -58,6 +72,6 @@ export default {
       </v-col>
     </v-row>
 
-    <add-route-modal :visible="addModalVisible" @onClose="addModalVisible = false" />
+    <add-route-modal :visible="addModalVisible" @reloadRouteList="reloadRouteList" @onClose="addModalVisible = false" />
   </div>
 </template>

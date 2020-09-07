@@ -15,21 +15,22 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable('routes_priority', {
-    route_priority_id: { type: 'serial', primaryKey: true, autoIncrement: true, notNull: true },
-    name: { type: 'text' },
-    brief: { type: 'text' }
+  return db.createTable('addresses_priority', {
+    address_priority_id: { type: 'serial', primaryKey: true, autoIncrement: true, notNull: true },
+    name: 'text',
+    brief: 'text'
   }, () => {
     db.runSql(`
-      insert into routes_priority(name, brief) values 
+      insert into addresses_priority(name, brief) values 
         ('Высокий', upper(to_brief('Высокий'))),
-        ('Обычный', upper(to_brief('Обычный')));
-    `);
+        ('Обычный', upper(to_brief('Обычный'))),
+        ('Низкий', upper(to_brief('Низкий')));
+    `)
   });
 };
 
 exports.down = function(db) {
-  return db.dropTable('routes_priority');
+  return db.dropTable('addresses_priority');
 };
 
 exports._meta = {
