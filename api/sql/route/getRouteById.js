@@ -32,7 +32,7 @@ module.exports = async ({ routeId, userId }) => {
         ) t
       )
     from routes r
-    inner join routes_priority rp on rp.priority_id = r.priority_id
+    inner join routes_priority rp on rp.route_priority_id = r.priority_id
     where r.route_id = ${routeId}
     and r.deleted = false
     and r.creator_id = ${userId}
