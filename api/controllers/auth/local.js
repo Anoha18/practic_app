@@ -1,16 +1,20 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const { refreshToken } = require('../../sql');
-const accessJwtSecret = process.env.ACCESS_JWT_SECRET;
-const refreshJwtSecret = process.env.REFRESH_JWT_SECRET;
-const expiresInRefreshToken = process.env.REFRESH_JWT_LIFE;
-const expiresInAccessToken = process.env.ACCESS_JWT_LIFE;
+const {
+  JWT: {
+    ACCESS_JWT_LIFE,
+    REFRESH_JWT_LIFE,
+    ACCESS_JWT_SECRET,
+    REFRESH_JWT_SECRET
+  }
+} = require('../../../config');
 
 const generateAccessJWT = payload => jwt
-  .sign(payload, accessJwtSecret, { expiresIn: expiresInAccessToken });
+  .sign(payload, ACCESS_JWT_SECRET, { expiresIn: ACCESS_JWT_LIFE });
 
 const generateRefreshJWT = payload => jwt
-  .sign(payload, refreshJwtSecret, { expiresIn: expiresInRefreshToken });
+  .sign(payload, REFRESH_JWT_SECRET, { expiresIn: REFRESH_JWT_LIFE });
 
 module.exports = (req, res, next) => {
   passport.authenticate('local', { session: false }, async (error, user, info) => {

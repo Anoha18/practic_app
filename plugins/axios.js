@@ -14,5 +14,7 @@ export default ({ $axios, redirect, store }) => {
       config.headers.Authorization = 'Bearer ' + access_token;
       return $axios.request(config);
     }
+
+    throw new Error(error);
   });
 };

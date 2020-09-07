@@ -1,6 +1,6 @@
 const { Strategy, ExtractJwt } = require('passport-jwt');
 const { user: { getUserById } } = require('../sql');
-const ACCESS_JWT_SECRET = process.env.ACCESS_JWT_SECRET;
+const { JWT: { ACCESS_JWT_SECRET } } = require('../../config');
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: ACCESS_JWT_SECRET

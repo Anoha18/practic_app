@@ -1,11 +1,12 @@
 const { Pool } = require('pg');
+const { DB } = require('../config');
 
 const pool = new Pool({
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT
+  database: DB.NAME,
+  user: DB.USER,
+  password: DB.PASSWORD,
+  host: DB.HOST,
+  port: DB.PORT
 })
 
 const oldPoolQuery = pool.query;
