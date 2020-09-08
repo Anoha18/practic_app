@@ -7,11 +7,13 @@ const pool = new Pool({
   password: DB.PASSWORD,
   host: DB.HOST,
   port: DB.PORT
-})
+});
 
 const oldPoolQuery = pool.query;
 pool.query = (...args) => {
-  console.log('QUERY:', args);
+  if (args && args[0]) {
+    console.log(`\n\nQUERY: \n\t${args[0]}\n`);
+  }
   return oldPoolQuery.apply(pool, args);
 };
 

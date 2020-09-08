@@ -36,9 +36,6 @@ export default {
       nameRules: [
         v => !!v || 'Название обязательно'
       ],
-      carRules: [
-        v => !!v || 'Выберите автомобиль'
-      ],
       addressRules: [
         v => !!v || 'Укажите адрес'
       ],
@@ -60,16 +57,6 @@ export default {
         {
           id: 2,
           name: 'Высокий'
-        }
-      ],
-      carList: [
-        {
-          id: 1,
-          name: 'Мусоровоз 1'
-        },
-        {
-          id: 2,
-          name: 'Мусоровоз 2'
         }
       ]
     };
@@ -203,15 +190,6 @@ export default {
             label="Приоритет"
             item-text="name"
             item-value="id"
-          />
-          <v-select
-            v-model="route.car"
-            :items="carList"
-            label="Автомобиль*"
-            item-text="name"
-            item-value="id"
-            required
-            :rules="carRules"
           />
           <v-textarea
             v-model="route.comment"

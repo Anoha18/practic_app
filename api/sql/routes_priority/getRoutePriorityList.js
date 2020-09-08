@@ -2,9 +2,9 @@ const { pool } = require('../../db');
 
 module.exports = async () => {
   const query = `
-    select priority_id as id, name, brief
+    select route_priority_id as id, name, brief
     from routes_priority
-    order by priority_id
+    order by route_priority_id
   `;
 
   try {
