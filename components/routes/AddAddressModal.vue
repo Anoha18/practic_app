@@ -31,7 +31,8 @@ export default {
         priority: 1,
         comment: '',
         weight: null,
-        price: null
+        price: null,
+        routeId: this.routeId
       },
       nameRules: [
         v => !!v || 'Название обязательно'
@@ -40,10 +41,10 @@ export default {
         v => !!v || 'Укажите адрес'
       ],
       weightRules: [
-        v => (+v || v === '') || 'Только цифры'
+        v => (!!+v || v === '') || 'Только цифры'
       ],
       priceRules: [
-        v => (+v || v === '') || 'Только цифры'
+        v => (!!+v || v === '') || 'Только цифры'
       ],
       menuDatePicker: false,
       datePicker: '',
@@ -70,15 +71,45 @@ export default {
     closeModal() {
       this.$emit('onClose');
     },
-    saveRoute() {
+    async saveRoute() {
+      let response;
+      try {
+        response = await this.$axios.$put('/api/addresses/new', this.route);
+      } catch (error) {
+        console.error(error);
+        return this.$store.commit('SET_GLOBAL_SNACKBAR', {
+          ...this.$store.getters.globalSnackbar,
+          ...{
+            visible: true,
+            text: 'Произошла ошибка при сохранении адреса. Сообщение ошибки: ' + error.message,
+            timeout: 7000,
+            color: 'error'
+          }
+        });
+      }
+
       console.log('SUBMIT: ', this.route);
+      this.$emit('onSaveAddress', true);
       this.closeModal();
+      this.clearData();
     },
     formatDate(date) {
       if (!date) { return null; }
 
       const [year, month, day] = date.split('-');
       return `${day}.${month}.${year}`;
+    },
+    clearData() {
+      this.route.name = '';
+      this.route.comment = '';
+      this.route.timeStart = '';
+      this.route.timeEnd = '';
+      this.route.address = null;
+      this.route.lat = null;
+      this.route.lng = null;
+      this.route.priority = 1;
+      this.route.weight = null;
+      this.route.price = null;
     },
     handleSelectAddress(value) {
       if (!value) {

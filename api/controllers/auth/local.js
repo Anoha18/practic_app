@@ -11,10 +11,10 @@ const {
 } = require('../../../config');
 
 const generateAccessJWT = payload => jwt
-  .sign(payload, ACCESS_JWT_SECRET, { expiresIn: ACCESS_JWT_LIFE });
+  .sign(payload, ACCESS_JWT_SECRET, { expiresIn: ACCESS_JWT_LIFE || '1h' });
 
 const generateRefreshJWT = payload => jwt
-  .sign(payload, REFRESH_JWT_SECRET, { expiresIn: REFRESH_JWT_LIFE });
+  .sign(payload, REFRESH_JWT_SECRET, { expiresIn: REFRESH_JWT_LIFE || '365d' });
 
 module.exports = (req, res, next) => {
   passport.authenticate('local', { session: false }, async (error, user, info) => {

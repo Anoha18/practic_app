@@ -8,27 +8,33 @@ export default {
     AddAddressModal
   },
   middleware: ['checkAuth'],
-  asyncData({ params }) {
+  async asyncData({ params, store }) {
     const { routeId } = params;
+    const { addressList } = await store.dispatch('route/getAddressList', routeId);
     return {
-      addressList: [
-        {
-          id: 1,
-          name: '123',
-          address: 'Чебоксары',
-          weight: '100',
-          price: '2000',
-          time_start: '8:00',
-          time_end: '21:00',
-          priority: 'Важно'
-        }
-      ],
+      addressList: addressList || [],
       routeId
     };
   },
   data() {
     return {
       addModalVisible: false
+    };
+  },
+  computed: {
+    route() {
+      return this.$store.getters['route/route'];
+    }
+  },
+  methods: {
+    async reloadAddressList() {
+      const { addressList } = await this.$store.dispatch('route/getAddressList', this.routeId);
+      this.addressList = addressList;
+    }
+  },
+  head() {
+    return {
+      title: `Маршрут №${this.routeId} - список адресов`
     };
   }
 };
@@ -49,6 +55,6 @@ export default {
       <addresses-table :address-list="addressList" />
     </v-card>
 
-    <add-address-modal :route-id="+routeId" :visible="addModalVisible" @onClose="addModalVisible = false" />
+    <add-address-modal :route-id="+routeId" :visible="addModalVisible" @onSaveAddress="reloadAddressList" @onClose="addModalVisible = false" />
   </div>
 </template>

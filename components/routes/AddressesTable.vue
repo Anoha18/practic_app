@@ -16,7 +16,7 @@ export default {
         { text: 'Цена', value: 'price' },
         { text: 'Время начала работы', value: 'time_start' },
         { text: 'Время окончания работы', value: 'time_end' },
-        { text: 'Приоритет', value: 'priority' },
+        { text: 'Приоритет', value: 'priority_name' },
         { text: '', value: 'actions', sortable: false }
       ]
     };

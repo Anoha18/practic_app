@@ -29,7 +29,7 @@ export default {
 
 <template>
   <v-app-bar
-    :clipped-left="clipped"
+    :clipped-left="false"
     fixed
     app
   >

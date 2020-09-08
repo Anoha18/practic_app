@@ -12,7 +12,7 @@ const pool = new Pool({
 const oldPoolQuery = pool.query;
 pool.query = (...args) => {
   if (args && args[0]) {
-    console.log(`\n\nQUERY: \n\t${args[0]}\n`);
+    console.log(`\nQUERY: \n\t${args[0]}\n`);
   }
   return oldPoolQuery.apply(pool, args);
 };

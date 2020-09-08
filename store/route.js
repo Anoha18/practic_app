@@ -24,6 +24,26 @@ export const actions = {
 
     commit('SET_ROUTE', result);
     return { route: result };
+  },
+
+  async getAddressList(_, routeId) {
+    let response;
+    try {
+      response = await this.$axios.$get('/api/addresses/list', {
+        params: { routeId }
+      });
+    } catch (error) {
+      console.error(error);
+      return { error: error.message };
+    }
+
+    const { result, error } = response;
+    if (error) {
+      console.error(error);
+      return { error };
+    }
+
+    return { addressList: result };
   }
 };
 

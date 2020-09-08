@@ -2,9 +2,9 @@ const { pool } = require('../../db');
 
 module.exports = async({ routeId }) => {
   const query = `
-    select address_id as id, name,
-      to_char(a.time_start, 'HH24:MI'),
-      to_char(a.time_end, 'HH24:MI'),
+    select a.address_id as id, a.name,
+      to_char(a.time_start, 'HH24:MI') time_start,
+      to_char(a.time_end, 'HH24:MI') time_end,
       to_char(a.created_at, 'HH24:MI') created_time,
       to_char(a.created_at, 'DD.MM.YYYY') created_date,
       to_char(a.updated_at, 'HH24:MI') updated_time,
@@ -16,7 +16,7 @@ module.exports = async({ routeId }) => {
     from addresses a
     inner join addresses_priority ap on ap.address_priority_id = a.priority_id
     where a.route_id = ${routeId}
-    a.deleted = false
+    and a.deleted = false
   `;
 
   try {

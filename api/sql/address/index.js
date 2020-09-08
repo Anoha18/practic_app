@@ -1,5 +1,7 @@
-const getAddressesByRouteId = require('./getAddressesByRouteId');
+const getAddresses = require('./getAddresses');
+const saveAddress = require('./saveAddress');
 
 module.exports = {
-  getAddressesByRouteId
+  getAddresses,
+  saveAddress
 };

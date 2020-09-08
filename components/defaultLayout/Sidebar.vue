@@ -39,13 +39,24 @@ export default {
 
 <template>
   <v-navigation-drawer
-    v-model="drawer"
+    :value="drawer"
     :mini-variant="miniVariant"
-    :clipped="clipped"
+    :clipped="false"
     fixed
     app
+    :mobile-breakpoint="0"
+    @input="(val) => $emit('onChangeDrawer', val)"
   >
     <v-list>
+      <v-list-item two-line :class="miniVariant && 'px-1'">
+        <v-list-item-content>
+          <v-list-item-title>Вывоз ТБО в Чувашской<br>Республике</v-list-item-title>
+          <!-- <v-list-item-subtitle>Subtext</v-list-item-subtitle> -->
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider />
+
       <v-list-item
         v-for="(item, i) in items"
         :key="i"
