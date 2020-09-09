@@ -1,10 +1,14 @@
 export const state = () => ({
-  route: null
+  route: null,
+  addressList: []
 });
 
 export const mutations = {
   SET_ROUTE(state, route) {
     state.route = route;
+  },
+  SET_ADDRESS_LIST(state, addressList) {
+    state.addressList = addressList;
   }
 };
 
@@ -26,7 +30,7 @@ export const actions = {
     return { route: result };
   },
 
-  async getAddressList(_, routeId) {
+  async getAddressList({ commit }, routeId) {
     let response;
     try {
       response = await this.$axios.$get('/api/addresses/list', {
@@ -43,10 +47,12 @@ export const actions = {
       return { error };
     }
 
+    commit('SET_ADDRESS_LIST', result || []);
     return { addressList: result };
   }
 };
 
 export const getters = {
-  route: s => s.route
+  route: s => s.route,
+  addressList: s => s.addressList
 };

@@ -12,7 +12,6 @@ export default {
     const { routeId } = params;
     const { addressList } = await store.dispatch('route/getAddressList', routeId);
     return {
-      addressList: addressList || [],
       routeId
     };
   },
@@ -24,12 +23,14 @@ export default {
   computed: {
     route() {
       return this.$store.getters['route/route'];
+    },
+    addressList() {
+      return this.$store.getters['route/addressList'];
     }
   },
   methods: {
     async reloadAddressList() {
-      const { addressList } = await this.$store.dispatch('route/getAddressList', this.routeId);
-      this.addressList = addressList;
+      await this.$store.dispatch('route/getAddressList', this.routeId);
     }
   },
   head() {
@@ -48,6 +49,12 @@ export default {
           mdi-plus
         </v-icon>
         Добавить адрес
+      </v-btn>
+      <v-btn rounded @click="$router.push('/')">
+        <v-icon dark>
+          mdi-plus
+        </v-icon>
+        Карта
       </v-btn>
     </div>
 

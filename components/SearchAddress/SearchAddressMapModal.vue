@@ -3,7 +3,7 @@ import SearchAddress from '~/components/map/SearchAddress';
 
 export default {
   components: {
-    SearchAddress
+    // SearchAddress
   },
   props: {
     visible: {
@@ -27,6 +27,15 @@ export default {
   computed: {
     nominatimUrl() {
       return this.$store.getters.nominatimUrl;
+    },
+    activeSelect() {
+      const {
+        lat, lng, address
+      } = this.marker;
+      if (!lat || !lng || !address) {
+        return false;
+      }
+      return true;
     }
   },
   watch: {
@@ -128,6 +137,13 @@ export default {
         <v-toolbar-items>
           <v-btn
             text
+            @click="closeModal"
+          >
+            Отменить
+          </v-btn>
+          <v-btn
+            text
+            :disabled="!activeSelect"
             @click="select"
           >
             Выбрать
