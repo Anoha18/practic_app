@@ -45,8 +45,8 @@ export default {
 </script>
 
 <template>
-  <div>
-    <v-toolbar class="route-toolbar" :height="150">
+  <div class="route-content-container">
+    <v-toolbar class="route-toolbar" :height="45">
       <v-btn text @click="$router.go(-1)">
         <v-icon>
           mdi-arrow-left
@@ -55,17 +55,6 @@ export default {
       <v-toolbar-title :style="{marginLeft: '10px'}">
         {{ route.name || route.description || '' }}
       </v-toolbar-title>
-      <v-spacer />
-      <v-container>
-        <v-row>
-          <v-col v-if="route.description" :cols="2">
-            Описание: {{ route.description }}
-          </v-col>
-          <v-col v-if="route.priority_name" :cols="2">
-            Приоритет: {{ route.priority_name }}
-          </v-col>
-        </v-row>
-      </v-container>
       <template v-slot:extension>
         <v-row flex :style="{paddingLeft: '10px'}">
           <nuxt-link
@@ -78,6 +67,26 @@ export default {
           >
             Адреса
           </nuxt-link>
+          <nuxt-link
+            replace
+            :to="`/routes/${routeId}/map`"
+            class="tab-link"
+            tag="div"
+            exact-active-class="tab-link-active"
+            active-class="tab-link-active"
+          >
+            Карта
+          </nuxt-link>
+          <nuxt-link
+            replace
+            :to="`/routes/${routeId}/info`"
+            class="tab-link"
+            tag="div"
+            exact-active-class="tab-link-active"
+            active-class="tab-link-active"
+          >
+            Описание
+          </nuxt-link>
         </v-row>
       </template>
     </v-toolbar>
@@ -88,9 +97,18 @@ export default {
 
 <style lang="scss">
   .route-toolbar {
-    .v-toolbar__content {
-      flex-wrap: wrap;
-      align-items: top;
-    }
+    flex: 0 0;
+
+    // .v-toolbar__content {
+    //   flex-wrap: wrap;
+    //   align-items: top;
+    // }
+  }
+
+  .route-content-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    min-height: 100%;
   }
 </style>

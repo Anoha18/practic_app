@@ -42,19 +42,13 @@ export default {
 </script>
 
 <template>
-  <div :style="{padding: '15px 15px 0 15px', width: '100%', height: '100%'}">
+  <div class="container-address__table">
     <div :style="{marginBottom: '10px'}">
       <v-btn rounded @click="addModalVisible = true">
         <v-icon dark>
           mdi-plus
         </v-icon>
         Добавить адрес
-      </v-btn>
-      <v-btn rounded @click="$router.push('/')">
-        <v-icon dark>
-          mdi-plus
-        </v-icon>
-        Карта
       </v-btn>
     </div>
 
@@ -65,3 +59,12 @@ export default {
     <add-address-modal :route-id="+routeId" :visible="addModalVisible" @onSaveAddress="reloadAddressList" @onClose="addModalVisible = false" />
   </div>
 </template>
+
+<style lang="scss">
+  .container-address__table {
+    padding: 15px 15px 0 15px;
+    width: 100%;
+    height: 100%;
+    flex: 1 1;
+  }
+</style>

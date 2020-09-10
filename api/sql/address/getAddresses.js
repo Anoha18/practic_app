@@ -12,7 +12,9 @@ module.exports = async({ routeId }) => {
       a.address,
       ap.name priority_name,
       a.price,
-      a.weight
+      a.weight,
+      a.lat,
+      a.lng
     from addresses a
     inner join addresses_priority ap on ap.address_priority_id = a.priority_id
     where a.route_id = ${routeId}
