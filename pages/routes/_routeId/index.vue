@@ -47,12 +47,13 @@ export default {
 <template>
   <div class="route-content-container">
     <v-toolbar class="route-toolbar" :height="45">
-      <v-btn text @click="$router.go(-1)">
+      <v-btn text @click="$router.push('/')">
         <v-icon>
           mdi-arrow-left
         </v-icon>
       </v-btn>
       <v-toolbar-title :style="{marginLeft: '10px'}">
+        <img v-if="route.priority_name === 'Высокий'" :style="{width: '20px', height: '20px'}" src="~assets/images/svg/fire.svg">
         {{ route.name || route.description || '' }}
       </v-toolbar-title>
       <template v-slot:extension>

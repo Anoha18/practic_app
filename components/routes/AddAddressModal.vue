@@ -156,7 +156,7 @@ export default {
           <v-text-field
             v-model="route.price"
             placeholder="1000"
-            label="Цена (руб)"
+            label="Цена, ₽"
             :rules="priceRules"
           />
           <v-menu

@@ -19,12 +19,6 @@ export default {
     return {
       title,
       routeList: result || []
-      // [
-      //   { id: 1, name: '1', date: '24.08.2020', base: 'База', addresses: 3 },
-      //   { id: 2, name: '1', date: '24.08.2020', base: 'База', addresses: 3 },
-      //   { id: 3, name: '1', date: '24.08.2020', base: 'База', addresses: 3 },
-      //   { id: 4, name: '1', date: '24.08.2020', base: 'База', addresses: 3 }
-      // ]
     };
   },
   data() {

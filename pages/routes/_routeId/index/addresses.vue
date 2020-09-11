@@ -35,7 +35,7 @@ export default {
   },
   head() {
     return {
-      title: `Маршрут №${this.routeId} - список адресов`
+      title: `Маршрут №${this.routeId} - Адреса`
     };
   }
 };

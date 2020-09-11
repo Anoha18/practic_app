@@ -7,15 +7,32 @@ const routeKey = [
   'r.name',
   'r.description',
   "to_char(r.date, 'DD.MM.YYYY') date",
-  "to_char(r.time_start, 'HH24:MI')",
-  "to_char(r.time_end, 'HH24:MI')",
+  "to_char(r.time_start, 'HH24:MI') time_start",
+  "to_char(r.time_end, 'HH24:MI') time_end",
   "to_char(r.created_at, 'HH24:MI') created_time",
   "to_char(r.created_at, 'DD.MM.YYYY') created_date",
   "to_char(r.updated_at, 'HH24:MI') updated_time",
   "to_char(r.updated_at, 'DD.MM.YYYY') updated_date",
   'r.deleted',
   'r.creator_id',
-  'rp.name as priority_name'
+  'rp.name as priority_name',
+  `(
+    select count(*) address_count from addresses a
+    where a.route_id = r.route_id
+    and a.deleted = false
+  )`,
+  `(
+    select sum(a.price) total_price from addresses a
+    where a.route_id = r.route_id
+    and a.deleted = false
+  )
+  `,
+  `(
+    select sum(a.weight) total_weight from addresses a
+    where a.route_id = r.route_id
+    and a.deleted = false
+  )
+  `
 ];
 
 module.exports = async ({ routeId, userId }) => {

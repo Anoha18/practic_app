@@ -48,6 +48,18 @@ exports.up = function(db) {
         mapping: 'route_id'
       }
     },
+    type_id: {
+      type: 'int',
+      foreignKey: {
+        name: 'addresses_type_id_fkey',
+        table: 'addresses_type',
+        rules: {
+          onDelete: 'CASCADE',
+          onUpdate: 'RESTRICT'
+        },
+        mapping: 'address_type_id'
+      }
+    },
     lat: 'text',
     lng: 'text',
     created_at: { type: 'timestamp', defaultValue: new String('now()') },
@@ -72,7 +84,9 @@ exports.down = function(db) {
   return db.removeForeignKey('addresses', 'addresses_addresses_priority_id_fkey', () => {
     db.removeForeignKey('addresses', 'addresses_route_id_fkey', () => {
       db.removeForeignKey('addresses', 'addresses_creator_id_fkey', () => {
-        db.dropTable('addresses');
+        db.removeForeignKey('addresses', 'addresses_type_id_fkey', () => {
+          db.dropTable('addresses');
+        });
       });
     });
   });

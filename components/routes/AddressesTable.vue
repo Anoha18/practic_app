@@ -12,10 +12,10 @@ export default {
         { text: '№', sortable: true, value: 'id' },
         { text: 'Название', align: 'start', sortable: true, value: 'name' },
         { text: 'Адрес', value: 'address' },
-        { text: 'Вес', value: 'weight' },
-        { text: 'Цена', value: 'price' },
-        { text: 'Время начала работы', value: 'time_start' },
-        { text: 'Время окончания работы', value: 'time_end' },
+        { text: 'Вес (кг)', value: 'weight' },
+        { text: 'Цена, ₽', value: 'price' },
+        { text: 'Время начала', value: 'time_start' },
+        { text: 'Время окончания', value: 'time_end' },
         { text: 'Приоритет', value: 'priority_name' },
         { text: '', value: 'actions', sortable: false }
       ]
@@ -29,7 +29,21 @@ export default {
     :headers="headers"
     :items="addressList"
   >
-    <template v-slot:item.actions="{ item }">
+    <template v-slot:[`item.name`]="{ item }">
+      <img v-if="item.priority_name === 'Высокий'" :style="{width: '20px', height: '20px'}" src="~assets/images/svg/fire.svg">
+      {{ item.name || '' }}
+    </template>
+    <template v-slot:[`item.address`]="{ item }">
+      <p
+        :style="{textOverflow: 'ellipsis',
+                 whiteSpace: 'nowrap',
+                 overflow: 'hidden',
+                 maxWidth: '500px'}"
+      >
+        {{ item.address }}
+      </p>
+    </template>
+    <template v-slot:[`item.actions`]>
       <v-icon
         small
         class="mr-2"

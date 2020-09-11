@@ -1,7 +1,11 @@
 <script>
 import { mdiMapMarkerDistance } from '@mdi/js';
+import AddAddressModal from '~/components/routes/AddAddressModal';
 
 export default {
+  components: {
+    AddAddressModal
+  },
   middleware: ['checkAuth'],
   async asyncData({ params, store }) {
     const { routeId } = params;
@@ -20,7 +24,8 @@ export default {
       draggable: false,
       polylineList: [],
       gettingRoutes: false,
-      totalDistance: null
+      totalDistance: null,
+      addModalVisible: false
     };
   },
   computed: {
@@ -98,7 +103,15 @@ export default {
 
         vm.totalDistance = routes[0].summary.totalDistance;
       });
+    },
+    async reloadAddressList() {
+      await this.$store.dispatch('route/getAddressList', this.routeId);
     }
+  },
+  head() {
+    return {
+      title: `Маршрут №${this.routeId} - Карта`
+    };
   }
 };
 </script>
@@ -119,7 +132,13 @@ export default {
         <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
         <l-control-zoom position="bottomright" />
         <l-control position="topright">
-          <v-btn :disabled="addressList.length < 1" @click="getRoute">
+          <v-btn @click="addModalVisible = true">
+            <v-icon dark>
+              mdi-plus
+            </v-icon>
+            Добавить адрес
+          </v-btn>
+          <v-btn v-if="addressList.length > 1" @click="getRoute">
             <v-icon>{{ mdiMapMarkerDistance }}</v-icon>
             Построить маршрут
           </v-btn>
@@ -144,6 +163,8 @@ export default {
         <l-polyline v-for="polyline in polylineList" :key="polyline.id" :lat-lngs="polyline.coords" :color="polyline.color" />
       </l-map>
     </client-only>
+
+    <add-address-modal :route-id="+routeId" :visible="addModalVisible" @onSaveAddress="reloadAddressList" @onClose="addModalVisible = false" />
   </div>
 </template>
 
