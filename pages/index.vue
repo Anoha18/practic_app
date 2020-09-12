@@ -11,7 +11,7 @@ export default {
   },
   middleware: ['checkAuth'],
   async asyncData({ store, $axios }) {
-    const title = 'Мои маршруты';
+    const title = 'Маршруты';
     store.commit('SET_HEADER_TITLE', title);
 
     const { result, error } = await $axios.$get('/api/routes/list');

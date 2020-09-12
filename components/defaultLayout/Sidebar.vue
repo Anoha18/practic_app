@@ -1,5 +1,10 @@
 <script>
-import { mdiLogoutVariant } from '@mdi/js';
+import {
+  mdiLogoutVariant,
+  mdiClipboardListOutline,
+  mdiHomeGroup,
+  mdiCarMultiple
+} from '@mdi/js';
 
 export default {
   props: {
@@ -21,9 +26,19 @@ export default {
       mdiLogoutVariant,
       items: [
         {
-          icon: 'mdi-apps',
-          title: 'Мои маршруты',
+          icon: mdiClipboardListOutline,
+          title: 'Маршруты',
           to: '/'
+        },
+        {
+          icon: mdiHomeGroup,
+          title: 'Базы',
+          to: '/base'
+        },
+        {
+          icon: mdiCarMultiple,
+          title: 'Спецтехника',
+          to: '/cars'
         }
       ]
     };

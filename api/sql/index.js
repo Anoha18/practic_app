@@ -3,11 +3,15 @@ const refreshToken = require('./refresh_token');
 const routesPriority = require('./routes_priority');
 const route = require('./route');
 const address = require('./address');
+const address_type = require('./address_type');
+const base = require('./base');
 
 module.exports = {
   user,
   refreshToken,
   routesPriority,
   route,
-  address
+  address,
+  address_type,
+  base
 };

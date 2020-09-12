@@ -19,17 +19,27 @@ export default {
         timeStart: '',
         timeEnd: '',
         priorityId: 2,
-        description: ''
+        description: '',
+        baseId: null
       },
       nameRules: [
         v => !!v || 'Наименование обязательно'
+      ],
+      baseRules: [
+        v => !!v || 'Выберите базу'
       ],
       menuDatePicker: false,
       datePicker: '',
       menuTimeStartPicker: false,
       menuTimeEndPicker: false,
-      routesPriorityList: []
+      routesPriorityList: [],
+      baseList: []
     };
+  },
+  computed: {
+    user() {
+      return this.$store.getters['user/user'];
+    }
   },
   watch: {
     datePicker(val) {
@@ -38,6 +48,9 @@ export default {
     async visible(val) {
       if (val && !this.routesPriorityList.length) {
         await this.loadPriorityList();
+      }
+      if (val) {
+        await this.loadBaseList();
       }
     }
   },
@@ -101,6 +114,33 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    async loadBaseList() {
+      let response;
+      try {
+        response = await this.$axios.$get('/api/base/list', {
+          params: {
+            userId: this.user.id
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+
+      const { result, error } = response;
+      if (error) {
+        this.$store.commit('SET_GLOBAL_BOTTOM_SHEET', {
+          text: `Произошла ошибка при загрузке списка баз.
+                 <br>Сообщение ошибки: ${error}
+                 <br>Обратитесь в службу поддержки.`,
+          visible: true
+        });
+      }
+
+      this.baseList = result;
+      if (result.length === 1) {
+        this.route.baseId = result[0].id;
+      }
     }
   }
 };
@@ -114,9 +154,15 @@ export default {
   >
     <v-card>
       <v-card-title>
-        <span class="headline">Добавление маршрута</span>
+        <span class="headline">
+          Добавление маршрута
+        </span>
       </v-card-title>
       <v-card-text>
+        <span v-if="!baseList.length" :style="{color: 'red'}">
+          <br>
+          Не найдено активных баз. Сначала добавьте базу прежде чем создавать маршрут
+        </span>
         <v-form ref="routeForm" v-model="valid" lazy-validation>
           <v-text-field v-model="route.name" placeholder="Вывоз ТБО по улице Университесткая" label="Наименование" required :rules="nameRules" />
           <v-menu
@@ -201,6 +247,14 @@ export default {
             item-text="name"
             item-value="id"
           />
+          <v-select
+            v-model="route.baseId"
+            :items="baseList"
+            label="База"
+            item-text="name"
+            item-value="id"
+            :rules="baseRules"
+          />
           <v-textarea
             v-model="route.description"
             name="input-7-1"
@@ -215,7 +269,7 @@ export default {
         <v-btn text @click="() => {clearData(); closeModal();}">
           Отменить
         </v-btn>
-        <v-btn text @click="saveRoute">
+        <v-btn :disabled="!valid || !baseList.length" text @click="saveRoute">
           Сохранить
         </v-btn>
       </v-card-actions>
