@@ -35,10 +35,13 @@ export default {
     </template>
     <template v-slot:[`item.address`]="{ item }">
       <p
-        :style="{textOverflow: 'ellipsis',
-                 whiteSpace: 'nowrap',
-                 overflow: 'hidden',
-                 maxWidth: '500px'}"
+        :style="{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          maxWidth: '500px',
+          margin: 0
+        }"
       >
         {{ item.address }}
       </p>

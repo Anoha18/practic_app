@@ -18,8 +18,10 @@ const routeKey = [
   'rp.name as priority_name',
   `(
     select count(*) address_count from addresses a
+    inner join addresses_type at on at.address_type_id = a.type_id
     where a.route_id = r.route_id
     and a.deleted = false
+    and at.brief = 'ADRES_MARSHRUTA'
   )`
 ];
 

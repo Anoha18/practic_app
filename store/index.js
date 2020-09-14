@@ -9,6 +9,11 @@ export const state = () => ({
     timeout: 3000,
     top: true,
     color: 'success'
+  },
+  globalBottomSheet: {
+    visible: false,
+    text: '',
+    colorText: 'red'
   }
 });
 
@@ -18,6 +23,12 @@ export const mutations = {
   },
   SET_GLOBAL_SNACKBAR(state, globalSnackbar) {
     state.globalSnackbar = globalSnackbar;
+  },
+  SET_GLOBAL_BOTTOM_SHEET(state, globalBottomSheet) {
+    state.globalBottomSheet = {
+      ...state.globalBottomSheet,
+      ...globalBottomSheet
+    };
   }
 };
 
@@ -34,5 +45,6 @@ export const getters = {
   osrmUrl: s => s.osrmUrl,
   headerTitle: s => s.headerTitle,
   theme: s => s.theme,
-  globalSnackbar: s => s.globalSnackbar
+  globalSnackbar: s => s.globalSnackbar,
+  globalBottomSheet: s => s.globalBottomSheet
 };

@@ -121,7 +121,7 @@ export default {
     <client-only>
       <l-map
         ref="map"
-        :style="{height: '100%', position: 'absolute'}"
+        :style="{height: '100%', position: 'absolute', zIndex: 200}"
         :zoom="zoom"
         :center="center"
         language="ru"

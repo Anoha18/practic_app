@@ -2,12 +2,14 @@
 import Sidebar from '~/components/defaultLayout/Sidebar';
 import Navbar from '~/components/defaultLayout/Navbar';
 import GlobalSnackbar from '~/components/GlobalSnackbar';
+import GlobalBottomSheet from '~/components/GlobalBottomSheet';
 
 export default {
   components: {
     Sidebar,
     Navbar,
-    GlobalSnackbar
+    GlobalSnackbar,
+    GlobalBottomSheet
   },
   data() {
     return {
@@ -36,5 +38,6 @@ export default {
     </v-main>
 
     <global-snackbar />
+    <global-bottom-sheet />
   </v-app>
 </template>

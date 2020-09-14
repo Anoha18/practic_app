@@ -1,7 +1,7 @@
 <script>
 export default {
   asyncData({ store }) {
-    const title = 'Спецтехника';
+    const title = 'Базы';
     store.commit('SET_HEADER_TITLE', title);
 
     return {
