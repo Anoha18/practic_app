@@ -1,5 +1,5 @@
 import colors from 'vuetify/es5/util/colors';
-import { APP } from './config';
+import { APP, BASE_URL } from './config';
 
 export default {
   /*
@@ -77,8 +77,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    // host: process.env.SERVER_API_HOST,
-    // port: process.env.SERVER_API_PORT,
+    baseURL: BASE_URL
   },
   /*
   ** vuetify module configuration

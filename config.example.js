@@ -1,10 +1,7 @@
 module.exports = {
+  BASE_URL: 'http://localhost:3000',
   APP: {
     NAME: 'Вывоз ТБО в Чувашской Республике'
-  },
-  API: {
-    PORT: 3001,
-    HOST: 'localhost'
   },
   JWT: {
     ACCESS_JWT_SECRET: 'ACCESS_SECRET',
@@ -14,7 +11,7 @@ module.exports = {
   },
   DB: {
     NAME: 'practic',
-    USER: 'user',
+    USER: 'anoha',
     PASSWORD: 0000,
     HOST: 'localhost',
     PORT: 5432
