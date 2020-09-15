@@ -5,6 +5,7 @@ const route = require('./route');
 const address = require('./address');
 const address_type = require('./address_type');
 const base = require('./base');
+const address_priority = require('./address_priority');
 
 module.exports = {
   user,
@@ -13,5 +14,6 @@ module.exports = {
   route,
   address,
   address_type,
-  base
+  base,
+  address_priority
 };

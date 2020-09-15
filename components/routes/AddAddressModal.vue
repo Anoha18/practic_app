@@ -50,26 +50,50 @@ export default {
       datePicker: '',
       menuTimeStartPicker: false,
       menuTimeEndPicker: false,
-      priorityList: [
-        {
-          id: 1,
-          name: 'Обычный'
-        },
-        {
-          id: 2,
-          name: 'Высокий'
-        }
-      ]
+      priorityList: []
     };
   },
   watch: {
     datePicker(val) {
       this.route.date = this.formatDate(this.datePicker);
+    },
+    async visible(val) {
+      if (val && !this.priorityList.length) {
+        await this.loadPriorityList();
+      }
     }
   },
   methods: {
     closeModal() {
       this.$emit('onClose');
+    },
+    async loadPriorityList() {
+      let response;
+      try {
+        response = await this.$axios.$get('/api/addresses_priority/list');
+      } catch (error) {
+        console.error(error);
+        return this.$store.commit('SET_GLOBAL_BOTTOM_SHEET', {
+          ...this.$store.getters.globalBottomSheet,
+          ...{
+            visible: true,
+            text: 'Произошла ошибка при загрузке списка приоритетов адресов. Сообщение ошибки: ' + error.message
+          }
+        });
+      }
+
+      const { error, result } = response;
+      if (error) {
+        console.error(error);
+        return this.$store.commit('SET_GLOBAL_BOTTOM_SHEET', {
+          ...this.$store.getters.globalBottomSheet,
+          ...{
+            visible: true,
+            text: 'Произошла ошибка при загрузке списка приоритетов адресов. Сообщение ошибки: ' + error
+          }
+        });
+      }
+      this.priorityList = result || [];
     },
     async saveRoute() {
       let response;

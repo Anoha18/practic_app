@@ -123,64 +123,73 @@ export default {
 <template>
   <v-dialog
     :value="visible"
-    fullscreen
     hide-overlay
+    fullscreen
     transition="dialog-bottom-transition"
+    content-class="dialog-map"
     @click:outside="closeModal"
   >
-    <v-card height="100px" tile>
-      <v-toolbar>
-        <v-toolbar-title>
-          Укажите адрес
-        </v-toolbar-title>
-        <v-spacer />
-        <v-toolbar-items>
-          <v-btn
-            text
-            @click="closeModal"
-          >
-            Отменить
-          </v-btn>
-          <v-btn
-            text
-            :disabled="!activeSelect"
-            @click="select"
-          >
-            Выбрать
-          </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
-      <v-card-text
-        :style="{height: '100%', width: '100%'}"
-      >
-        <l-map
-          v-if="visibleMap"
-          ref="map"
-          :style="{height: '100%', width: '100%'}"
-          :zoom="zoom"
-          :center="center"
-          language="ru"
-          :options="{zoomControl: false}"
-          @click="addMarker"
+    <v-toolbar :style="{flex: 0}">
+      <v-toolbar-title>
+        Укажите адрес
+      </v-toolbar-title>
+      <v-spacer />
+      <v-toolbar-items>
+        <v-btn
+          text
+          @click="closeModal"
         >
-          <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
-          <l-control position="topright">
-            <search-address :selected-address="marker.address" :coords="marker.lng && marker.lat ? marker : null" :style="{width: '500px'}" @onSelectAddress="handleSelectAddress" />
-          </l-control>
-          <l-marker
-            v-if="marker.lng && marker.lat"
-            :lat-lng="[marker.lat, marker.lng]"
-            :draggable="draggable"
-            @update:lat-lng="handleUpdateLatLng"
-          >
-            <l-popup>
-              {{ marker.address && marker.address.display_name }}
-            </l-popup>
-          </l-marker>
-        </l-map>
-      </v-card-text>
-    </v-card>
-    <!-- <client-only> -->
-    <!-- </client-only> -->
+          Отменить
+        </v-btn>
+        <v-btn
+          text
+          :disabled="!activeSelect"
+          @click="select"
+        >
+          Выбрать
+        </v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+    <div class="container-map">
+      <l-map
+        v-if="visibleMap"
+        ref="map"
+        :style="{position: 'absolute'}"
+        :zoom="zoom"
+        :center="center"
+        language="ru"
+        :options="{zoomControl: false}"
+        @click="addMarker"
+      >
+        <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
+        <l-control position="topright">
+          <search-address :selected-address="marker.address" :coords="marker.lng && marker.lat ? marker : null" :style="{width: '500px'}" @onSelectAddress="handleSelectAddress" />
+        </l-control>
+        <l-marker
+          v-if="marker.lng && marker.lat"
+          :lat-lng="[marker.lat, marker.lng]"
+          :draggable="draggable"
+          @update:lat-lng="handleUpdateLatLng"
+        >
+          <l-popup>
+            {{ marker.address && marker.address.display_name }}
+          </l-popup>
+        </l-marker>
+      </l-map>
+    </div>
   </v-dialog>
 </template>
+
+<style lang="scss">
+  .dialog-map {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .container-map {
+    width: 100%;
+    height: 100%;
+    flex: 1 1;
+    position: relative;
+  }
+</style>

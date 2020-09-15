@@ -4,6 +4,7 @@ const routes_priority = require('./routes_priority');
 const routes = require('./routes');
 const addresses = require('./addresses');
 const base = require('./base');
+const addresses_priority = require('./addresses_priority');
 
 module.exports = {
   auth,
@@ -11,5 +12,6 @@ module.exports = {
   routes_priority,
   routes,
   addresses,
-  base
+  base,
+  addresses_priority
 };

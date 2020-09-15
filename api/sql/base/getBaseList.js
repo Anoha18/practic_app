@@ -14,7 +14,7 @@ const baseKeys = [
   "to_char(a.updated_at, 'DD.MM.YYYY') updated_date"
 ];
 
-module.exports = async ({ userId }) => {
+module.exports = async({ userId }) => {
   const query = `
     select
       ${baseKeys.join(',')}
