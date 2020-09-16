@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       mdiClockTimeFiveOutline,
-      valid: true,
+      valid: false,
       base: {
         name: '',
         timeStart: null,
@@ -38,11 +38,46 @@ export default {
     };
   },
   methods: {
-    saveBase() {
-      console.log('SAVE BASe');
+    async saveBase() {
+      this.$refs.baseForm.validate();
+      await this.$nextTick();
+      if (!this.valid) { return; }
+
+      let respone;
+      try {
+        respone = await this.$axios.$put('/api/base/new', this.base);
+      } catch (error) {
+        console.error(error);
+        return this.displayError(error.message);
+      }
+      const { result, error } = respone;
+
+      if (error) { return this.displayError(error); }
+
+      this.$emit('onSaveBase', result);
+      this.clearData();
+      this.closeModal();
+    },
+    displayError(error) {
+      this.$store.commit('SET_GLOBAL_BOTTOM_SHEET', {
+        ...this.$store.getters.globalBottomSheet,
+        ...{
+          visible: true,
+          text: 'Произошла ошибка при сохранении базы. Сообщение ошибки: ' + error
+        }
+      });
     },
     closeModal() {
       this.$emit('onClose');
+    },
+    clearData() {
+      this.base.name = '';
+      this.base.timeStart = null;
+      this.base.timeEnd = null;
+      this.base.address = null;
+      this.base.lat = null;
+      this.base.lng = null;
+      this.base.comment = '';
     },
     handleSelectAddress(value) {
       if (!value) {
@@ -76,7 +111,7 @@ export default {
         <span class="headline">Добавление базы</span>
       </v-card-title>
       <v-card-text>
-        <v-form ref="routeForm" v-model="valid" lazy-validation>
+        <v-form ref="baseForm" v-model="valid" lazy-validation>
           <v-text-field
             v-model="base.name"
             :style="{marginBottom: '10px'}"
@@ -156,7 +191,7 @@ export default {
         <v-btn text @click="closeModal">
           Отменить
         </v-btn>
-        <v-btn text @click="saveBase">
+        <v-btn :disabled="!valid" text @click="saveBase">
           Сохранить
         </v-btn>
       </v-card-actions>

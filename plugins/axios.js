@@ -1,7 +1,7 @@
 export default ({ $axios, redirect, store }) => {
   $axios.onError(async(error) => {
-    const { response, request, config } = error;
-    const { status, statusText } = response;
+    const { response, config } = error || {};
+    const { status, statusText } = response || {};
     // console.log('RESPONSE: ', response);
     // console.log('REQUEST: ', request);
     console.error(`AXIOS ERROR: ${status || ''} - ${statusText || ''}`);

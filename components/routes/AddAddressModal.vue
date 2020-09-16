@@ -20,7 +20,7 @@ export default {
     return {
       mdiCalendar,
       mdiClockTimeFiveOutline,
-      valid: true,
+      valid: false,
       route: {
         name: '',
         timeStart: '',
@@ -260,7 +260,7 @@ export default {
         <v-btn text @click="closeModal">
           Отменить
         </v-btn>
-        <v-btn text @click="saveRoute">
+        <v-btn :disabled="!valid" text @click="saveRoute">
           Сохранить
         </v-btn>
       </v-card-actions>

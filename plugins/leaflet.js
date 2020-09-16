@@ -6,7 +6,8 @@ import {
   LPopup,
   LPolyline,
   LControl,
-  LControlZoom
+  LControlZoom,
+  LIcon
 } from 'vue2-leaflet';
 import 'leaflet-routing-machine';
 import { Icon } from 'leaflet';
@@ -25,3 +26,4 @@ Vue.component('l-popup', LPopup);
 Vue.component('l-polyline', LPolyline);
 Vue.component('l-control', LControl);
 Vue.component('l-control-zoom', LControlZoom);
+Vue.component('l-icon', LIcon);

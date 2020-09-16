@@ -6,6 +6,9 @@ export default {
     }
   },
   methods: {
+    handleClose(val) {
+      console.log(val);
+    },
     handleCloseBottomSheet() {
       this.$store.commit('SET_GLOBAL_BOTTOM_SHEET', {
         text: '',
@@ -18,7 +21,7 @@ export default {
 
 <template>
   <div class="text-center">
-    <v-bottom-sheet :value="globalBottomSheet.visible" inset>
+    <v-bottom-sheet :value="globalBottomSheet.visible" inset @click:outside="handleCloseBottomSheet">
       <v-sheet class="text-center" height="200px">
         <v-btn
           class="mt-6"

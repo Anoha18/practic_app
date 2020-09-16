@@ -14,7 +14,9 @@ module.exports = async({ routeId }) => {
       a.price,
       a.weight,
       a.lat,
-      a.lng
+      a.lng,
+      at.brief type_brief,
+      at.name type_name
     from addresses a
     inner join addresses_priority ap on ap.address_priority_id = a.priority_id
     inner join addresses_type at on at.address_type_id = a.type_id

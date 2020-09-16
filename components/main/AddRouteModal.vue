@@ -64,15 +64,13 @@ export default {
         response = await this.$axios.$put('/api/routes/new', this.route);
       } catch (error) {
         console.error(error);
-        return this.$store.commit('SET_GLOBAL_SNACKBAR', {
-          ...this.$store.getters.globalSnackbar,
-          ...{
-            visible: true,
-            text: 'Произошла ошибка при сохранении маршрута. Сообщение ошибки: ' + error,
-            timeout: 7000,
-            color: 'error'
-          }
-        });
+        return this.displayError(error);
+      }
+
+      const { error, result } = response;
+
+      if (error) {
+        return this.displayError(error);
       }
 
       this.$store.commit('SET_GLOBAL_SNACKBAR', {
@@ -87,8 +85,16 @@ export default {
       this.closeModal();
       this.clearData();
       this.$emit('reloadRouteList', true);
-      const { result: { route_id } } = response;
-      this.$router.push(`/routes/${route_id}`);
+      this.$router.push(`/routes/${result && result.route_id}`);
+    },
+    displayError(error) {
+      this.$store.commit('SET_GLOBAL_BOTTOM_SHEET', {
+        ...this.$store.getters.globalBottomSheet,
+        ...{
+          visible: true,
+          text: 'Произошла ошибка при сохранении маршрута. Сообщение ошибки: ' + error
+        }
+      });
     },
     clearData() {
       this.route.name = '';

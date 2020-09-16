@@ -1,7 +1,7 @@
 <script>
 export default {
   props: {
-    baseTable: {
+    baseList: {
       type: Array,
       default: () => []
     }
@@ -12,11 +12,7 @@ export default {
         { text: '№', sortable: true, value: 'id' },
         { text: 'Название', align: 'start', sortable: true, value: 'name' },
         { text: 'Адрес', value: 'address' },
-        { text: 'Вес (кг)', value: 'weight' },
-        { text: 'Цена, ₽', value: 'price' },
-        { text: 'Время начала', value: 'time_start' },
-        { text: 'Время окончания', value: 'time_end' },
-        { text: 'Приоритет', value: 'priority_name' },
+        { text: 'Часы работы', value: 'time' },
         { text: '', value: 'actions', sortable: false }
       ]
     };
@@ -27,7 +23,7 @@ export default {
 <template>
   <v-data-table
     :headers="headers"
-    :items="baseTable"
+    :items="baseList"
   >
     <template v-slot:[`item.name`]="{ item }">
       {{ item.name || '' }}
@@ -44,6 +40,9 @@ export default {
       >
         {{ item.address }}
       </p>
+    </template>
+    <template v-slot:[`item.time`]="{ item }">
+      {{ item.time_start || '' }} - {{ item.time_end || '' }}
     </template>
     <template v-slot:[`item.actions`]>
       <v-icon

@@ -1,6 +1,6 @@
 const { pool } = require('../../db');
 
-module.exports = async () => {
+module.exports = async() => {
   const query = `
     select route_priority_id as id, name, brief
     from routes_priority

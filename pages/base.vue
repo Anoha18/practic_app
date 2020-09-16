@@ -24,7 +24,10 @@ export default {
     };
   },
   methods: {
-    reloadBaseList() {}
+    async handleSaveBaseList() {
+      const { result } = await this.$store.dispatch('base/getBaseList');
+      this.baseList = result || [];
+    }
   },
   head() {
     return {
@@ -48,10 +51,10 @@ export default {
     </v-row>
     <v-row>
       <v-col>
-        <base-table :base-list="[]" />
+        <base-table :base-list="baseList" />
       </v-col>
     </v-row>
 
-    <add-base-modal :visible="addModalVisible" @reloadBaseList="reloadBaseList" @onClose="addModalVisible = false" />
+    <add-base-modal :visible="addModalVisible" @onSaveBase="handleSaveBaseList" @onClose="addModalVisible = false" />
   </div>
 </template>

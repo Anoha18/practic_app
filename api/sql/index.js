@@ -6,6 +6,9 @@ const address = require('./address');
 const address_type = require('./address_type');
 const base = require('./base');
 const address_priority = require('./address_priority');
+const link_type = require('./link_type');
+const object_type = require('./object_type');
+const address_link = require('./address_link');
 
 module.exports = {
   user,
@@ -15,5 +18,8 @@ module.exports = {
   address,
   address_type,
   base,
-  address_priority
+  address_priority,
+  object_type,
+  link_type,
+  address_link
 };

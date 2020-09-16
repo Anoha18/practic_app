@@ -14,6 +14,9 @@ pool.query = (...args) => {
   if (args && args[0]) {
     console.log(`\nQUERY: \n\t${args[0]}\n`);
   }
+  if (args && args[1]) {
+    console.log(`\nVALUES: \t${args[1]}\n`);
+  }
   return oldPoolQuery.apply(pool, args);
 };
 

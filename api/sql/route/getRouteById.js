@@ -41,7 +41,7 @@ const routeKey = [
   `
 ];
 
-module.exports = async ({ routeId, userId }) => {
+module.exports = async({ routeId, userId }) => {
   const query = `
     select ${routeKey.join(',')},
       (

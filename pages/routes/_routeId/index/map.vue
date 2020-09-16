@@ -12,6 +12,9 @@ export default {
     if (!store.getters['route/addressList'].length) {
       await store.dispatch('route/getAddressList', routeId);
     }
+    if (!store.getters['route/base']) {
+      await store.dispatch('route/getBaseByRouteId', routeId);
+    }
     return {
       routeId
     };
@@ -25,7 +28,8 @@ export default {
       polylineList: [],
       gettingRoutes: false,
       totalDistance: null,
-      addModalVisible: false
+      addModalVisible: false,
+      iconSize: 45
     };
   },
   computed: {
@@ -35,6 +39,9 @@ export default {
     addressList() {
       const addressList = this.$store.getters['route/addressList'];
       return addressList.map(address => ({ ...{ coords: [address.lat, address.lng] }, ...address }));
+    },
+    base() {
+      return this.$store.getters['route/base'];
     }
   },
   mounted() {
@@ -67,7 +74,11 @@ export default {
       });
     },
     getRoute() {
-      const wayPointList = [];
+      const { base } = this;
+      const baseCoords = L.latLng([base.lat, base.lng]);
+      const basePoint = new L.Routing.Waypoint();
+      basePoint.latLng = baseCoords;
+      const wayPointList = [basePoint];
       const { addressList } = this;
       const vm = this;
 
@@ -77,6 +88,7 @@ export default {
         wayPoint.latLng = L.latLng(coords);
         wayPointList.push(wayPoint);
       }
+      wayPointList.push(basePoint);
 
       const router = L.Routing.osrmv1({
         // serviceUrl: this.osrmUrl
@@ -138,7 +150,7 @@ export default {
             </v-icon>
             Добавить адрес
           </v-btn>
-          <v-btn v-if="addressList.length > 1" @click="getRoute">
+          <v-btn v-if="addressList.length !== 0" @click="getRoute">
             <v-icon>{{ mdiMapMarkerDistance }}</v-icon>
             Построить маршрут
           </v-btn>
@@ -147,6 +159,27 @@ export default {
             <v-card-text>{{ totalDistance }} м</v-card-text>
           </v-card>
         </l-control>
+        <l-marker
+          :key="base.id"
+          :lat-lng="[base.lat, base.lng]"
+          :draggable="draggable"
+        >
+          <!-- icon-url="~assets/images/png/base.png" -->
+          <l-icon
+            :icon-size="[iconSize, iconSize * 1.15]"
+            :icon-anchor="[iconSize / 2, iconSize * 1.15]"
+            class-name="base-icon__container"
+          >
+            <img src="~assets/images/svg/base.svg" class="base-icon">
+          </l-icon>
+          <l-popup>
+            <span :style="{fontWeight: 'bold'}">База №{{ base.id }}</span> <br>
+            <span :style="{fontWeight: 'bold'}">Наименование:</span> {{ base.name || '-' }} <br>
+            <span :style="{fontWeight: 'bold'}">Комментарий:</span> {{ base.comment || '-' }} <br>
+            <span :style="{fontWeight: 'bold'}">Адрес:</span> {{ base.address }} <br>
+            <span :style="{fontWeight: 'bold'}">Часы работы:</span> {{ base.time_start || 'не указано время открытия' }} - {{ base.time_end || 'не указано время закрытия' }}
+          </l-popup>
+        </l-marker>
         <l-marker
           v-for="address in addressList"
           :key="address.id"
@@ -174,5 +207,10 @@ export default {
     height: 100%;
     flex: 1 1;
     position: relative;
+  }
+
+  .base-icon {
+    height: 100%;
+    width: 100%;
   }
 </style>

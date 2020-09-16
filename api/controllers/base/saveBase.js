@@ -10,7 +10,7 @@ module.exports = async(req, res) => {
   }
 
   if (!body.typeId) {
-    const { addressesTypes, error } = await getAddressType({ brief: 'ADRES_MARSHRUTA' });
+    const { addressesTypes, error } = await getAddressType({ brief: 'BAZA' });
 
     if (error) {
       return res.status(500).json({ error });

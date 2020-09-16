@@ -8,6 +8,8 @@ const baseKeys = [
   'a.address',
   'a.lng',
   'a.lat',
+  "to_char(a.time_start, 'HH24:MI') time_start",
+  "to_char(a.time_end, 'HH24:MI') time_end",
   "to_char(a.created_at, 'HH24:MI') created_time",
   "to_char(a.created_at, 'DD.MM.YYYY') created_date",
   "to_char(a.updated_at, 'HH24:MI') updated_time",
