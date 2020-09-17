@@ -1,6 +1,6 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const { refreshToken } = require('../../sql');
+const { refreshToken: { saveRefreshToken } } = require('../../sql');
 const {
   JWT: {
     ACCESS_JWT_LIFE,
@@ -29,10 +29,15 @@ module.exports = (req, res, next) => {
     const access_token = generateAccessJWT(payload);
     const refresh_token = generateRefreshJWT(payload);
     const { clientIp } = req;
+    const { error: saveRefreshTokenError } = await saveRefreshToken({
+      userId: user.user_id,
+      refreshToken: refresh_token,
+      ip: clientIp
+    });
 
-    // const { error: createSessionError } = await session.createSession({ user_id: user.user_id, ip: clientIp, token: access_token });
-
-    // if (createSessionError) { console.error('CREATE SESSION ERROR: ', createSessionError); }
+    if (saveRefreshTokenError) {
+      console.error('SAVE REFRESH TOKEN ERROR: ', saveRefreshTokenError);
+    }
 
     res.cookie('access_token', access_token);
     res.cookie('refresh_token', refresh_token);

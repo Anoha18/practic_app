@@ -5,16 +5,16 @@ module.exports = async({ name, lastname, password, email, phone, login }) => {
 
   const query = `
     insert into users (name, lastname, password, email, phone, login)
-    values (?, ?, crypt(?, gen_salt('bf', 8)), ?, ?, ?) returning *
+    values ($1, $2, crypt($3, gen_salt('bf', 8)), $4, $5, $5) returning *
   `;
 
   try {
-    const result = await pool.query(query, [
+    const { rows } = await pool.query(query, [
       name || null, lastname || null, password, email || null, phone || null, login
     ]);
 
     return {
-      result
+      user: (rows && rows[0]) || null
     };
   } catch (error) {
     return { error: error.message };

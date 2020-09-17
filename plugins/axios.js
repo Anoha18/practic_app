@@ -2,9 +2,9 @@ export default ({ $axios, redirect, store }) => {
   $axios.onError(async(error) => {
     const { response, config } = error || {};
     const { status, statusText } = response || {};
-    // console.log('RESPONSE: ', response);
-    // console.log('REQUEST: ', request);
     console.error(`AXIOS ERROR: ${status || ''} - ${statusText || ''}`);
+    console.log('AXIOS ERROR RESPONSE: ', response);
+    console.log('AXIOS ERROR CONFIG: ', config);
     if (+status === 401) {
       const { user, access_token, error } = await store.dispatch('user/refreshToken');
 
@@ -16,5 +16,9 @@ export default ({ $axios, redirect, store }) => {
     }
 
     throw new Error(error);
+  });
+
+  $axios.onRequest((config) => {
+    config.headers.common.Authorization = `Bearer ${store.getters['user/access_token']}`;
   });
 };

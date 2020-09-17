@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
   const { routes, error } = await getRoutes({ userId: user.id });
 
   if (error) {
-    return res.status(500).json({ error });
+    return res.json({ error });
   }
 
   res.status(200).json({ result: routes });

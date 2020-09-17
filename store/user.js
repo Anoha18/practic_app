@@ -64,13 +64,15 @@ export const actions = {
       commit('SET_USER', user);
     } else if (!access_token && refresh_token) {
       const { user } = await dispatch('refreshToken');
-      commit('SET_USER', user);
+      if (user) {
+        commit('SET_USER', user);
+      }
     }
   },
   async logout({ commit }) {
     let response;
     try {
-      response = await this.$axios.$get('/api/auth/logout');
+      response = await this.$axios.$get('/api/logout');
     } catch (error) {
       console.error(error.message);
       return { error: error.message };
@@ -82,6 +84,9 @@ export const actions = {
     this.$axios.setToken(false);
     commit('SET_TOKEN', null);
     commit('SET_USER', null);
+    commit('SET_REFRESH_TOKEN', null);
+    this.$cookies.remove('access_token');
+    this.$cookies.remove('refresh_token');
 
     return { result };
   },
@@ -100,12 +105,22 @@ export const actions = {
       return { error: error.message };
     }
 
-    const { user } = response;
+    const { user, error } = response;
+
+    if (error) {
+      this.$axios.setToken(false);
+      commit('SET_TOKEN', null);
+      commit('SET_REFRESH_TOKEN', null);
+      this.$cookies.remove('access_token');
+      this.$cookies.remove('refresh_token');
+      return { error };
+    }
+
     const { access_token, refresh_token: new_refresh_token } = user;
     dispatch('setToken', access_token);
     commit('SET_REFRESH_TOKEN', new_refresh_token);
     this.$cookies.set('access_token', access_token);
-    this.$cookies.set('refresh_token', refresh_token);
+    this.$cookies.set('refresh_token', new_refresh_token);
 
     return {
       access_token,
