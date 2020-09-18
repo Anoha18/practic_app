@@ -1,5 +1,12 @@
 <script>
+import GlobalSnackbar from '~/components/GlobalSnackbar';
+import GlobalBottomSheet from '~/components/GlobalBottomSheet';
+
 export default {
+  components: {
+    GlobalSnackbar,
+    GlobalBottomSheet
+  },
   computed: {
     theme() { return this.$store.getters.theme; }
   }
@@ -16,5 +23,7 @@ export default {
         <nuxt />
       </v-container>
     </v-main>
+    <global-snackbar />
+    <global-bottom-sheet />
   </v-app>
 </template>

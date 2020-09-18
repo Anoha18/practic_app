@@ -11,6 +11,9 @@ export default {
   computed: {
     route() {
       return this.$store.getters['route/route'];
+    },
+    base() {
+      return this.$store.getters['route/base'];
     }
   },
   head() {
@@ -31,6 +34,7 @@ export default {
         {{ route.description || '-' }}
       </v-card-subtitle>
       <v-card-text>
+        <div>База: №{{ base.id }} {{ base.name ? '- ' + base.name : '' }}</div>
         <div>Дата: {{ route.date || '-' }}</div>
         <div>Время начала: {{ route.time_start || '-' }}</div>
         <div>Время окончания: {{ route.time_end || '-' }}</div>
