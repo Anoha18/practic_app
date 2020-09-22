@@ -91,7 +91,7 @@ export default {
       wayPointList.push(basePoint);
 
       const router = L.Routing.osrmv1({
-        // serviceUrl: this.osrmUrl
+        serviceUrl: this.osrmUrl
       });
 
       router.route(wayPointList, (error, routes) => {

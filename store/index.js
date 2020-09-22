@@ -1,6 +1,6 @@
 export const state = () => ({
   nominatimUrl: 'https://nominatim.openstreetmap.org',
-  osrmUrl: 'http://localhost:5000/route/v1',
+  osrmUrl: 'http://practic-app.xyz:5000/route/v1',
   headerTitle: '',
   theme: 'dark',
   globalSnackbar: {

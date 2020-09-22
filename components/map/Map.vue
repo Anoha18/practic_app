@@ -93,7 +93,7 @@ export default {
       wayPoint2.latLng = marker2Coords;
 
       const router = L.Routing.osrmv1({
-        // serviceUrl: this.osrmUrl
+        serviceUrl: this.osrmUrl
       });
       const vm = this;
       router.route([wayPoint1, wayPoint2], (error, routes) => {
